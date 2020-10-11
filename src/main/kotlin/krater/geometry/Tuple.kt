@@ -1,5 +1,8 @@
 package krater.geometry
 
+import java.lang.IllegalArgumentException
+import kotlin.math.sqrt
+
 class Tuple(val x: Double, val y: Double, val z: Double, val w: Double) {
 
     fun isPoint() = w != 0.0
@@ -34,6 +37,17 @@ class Tuple(val x: Double, val y: Double, val z: Double, val w: Double) {
     operator fun unaryMinus() = Tuple(-x, -y, -z, -w)
     operator fun times(num: Number) = Tuple(x * num.toDouble(), y * num.toDouble(), z * num.toDouble(), w * num.toDouble())
     operator fun div(num: Number) = Tuple(x / num.toDouble(), y / num.toDouble(), z / num.toDouble(), w / num.toDouble())
+    fun magnitude() = sqrt(x * x + y * y + z * z + w * w)
+    fun normalize(): Tuple {
+        val magnitude = this.magnitude()
+        return Tuple(x / magnitude, y / magnitude, z / magnitude, w / magnitude)
+    }
+
+    fun dot(other: Tuple): Double = x * other.x + y * other.y + z * other.z + w * other.w
+    fun cross(other: Tuple): Any {
+        if (!isVector()) throw IllegalArgumentException("Cross product only valid on vectors")
+        return vector(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
+    }
 }
 
 fun point(x: Number, y: Number, z: Number) = Tuple(x.toDouble(), y.toDouble(), z.toDouble(), 1.0)

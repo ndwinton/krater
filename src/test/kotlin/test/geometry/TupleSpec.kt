@@ -1,11 +1,12 @@
 package test.geometry
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.comparables.shouldBeEqualComparingTo
-import io.kotest.matchers.comparables.shouldNotBeEqualComparingTo
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import krater.geometry.*
+import kotlin.math.sqrt
 
 class TupleSpec : FunSpec({
 
@@ -103,5 +104,47 @@ class TupleSpec : FunSpec({
         val a = Tuple(1.0, -2.0, 3.0, -4.0)
 
         (a / 2).shouldBe(Tuple(0.5, -1.0, 1.5, -2.0))
+    }
+
+    test("Computing the magnitude of vectors") {
+        forAll(
+            row(vector(1, 0, 0), 1.0),
+            row(vector(0, 1, 0), 1.0),
+            row(vector(0, 0, 1), 1.0),
+            row(vector(1, 2, 3), sqrt(14.0)),
+            row(vector(-1, -2, -3), sqrt(14.0)),
+        ) { v, expected ->
+            v.magnitude().shouldBe(expected)
+        }
+    }
+
+    test("Normalizing vectors") {
+        forAll(
+            row(vector(4, 0, 0), vector(1, 0, 0)),
+            row(vector(1, 2, 3), vector(0.26726, 0.53452, 0.80178))
+        ) { v, normalized ->
+            v.normalize().shouldBe(normalized)
+        }
+    }
+
+    test("The magnitude of a normalized vector") {
+        val v = vector(1, 2, 3)
+        val mag = v.normalize().magnitude()
+        mag.near(1.0).shouldBe(true)
+    }
+
+    test("The dot product of two tuples") {
+        val a = vector(1, 2, 3)
+        val b = vector(2, 3, 4)
+
+        a.dot(b).shouldBe(20.0)
+    }
+
+    test("The cross product of two vectors") {
+        val a = vector(1, 2, 3)
+        val b = vector(2, 3, 4)
+
+        a.cross(b).shouldBe(vector(-1, 2, -1))
+        b.cross(a).shouldBe(vector(1, -2, 1))
     }
 })
