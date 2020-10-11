@@ -4,7 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
 }
 
-group 'org.example'
+group 'krater'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -14,18 +14,11 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 
-    testImplementation "org.codehaus.groovy:groovy:2.5.13"
-
-    testImplementation platform("org.spockframework:spock-bom:2.0-M3-groovy-2.5")
-    testImplementation "org.spockframework:spock-core"
-    testImplementation "org.spockframework:spock-junit4"
-
-    // optional dependencies for using Spock
-    testImplementation "org.hamcrest:hamcrest-core:2.2"   // only necessary if Hamcrest matchers are used
-    testRuntime "net.bytebuddy:byte-buddy:1.10.10" // allows mocking of classes (in addition to interfaces)
-    testRuntime "org.objenesis:objenesis:3.1" // allows mocking of classes without default constructor (together with ByteBuddy or CGLIB)}
+    testImplementation 'io.kotest:kotest-runner-junit5:4.2.6' // for kotest framework
+    testImplementation 'io.kotest:kotest-assertions-core:4.2.6' // for kotest core jvm assertions
+    testImplementation 'io.kotest:kotest-property:4.2.6' // for kotest property test
 }
 
-//test {
-//    useJUnitPlatform()
-//}
+test {
+    useJUnitPlatform()
+}
