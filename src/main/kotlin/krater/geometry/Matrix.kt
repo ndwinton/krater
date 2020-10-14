@@ -1,5 +1,8 @@
 package krater.geometry
 
+import kotlin.math.cos
+import kotlin.math.sin
+
 class Row(val values: DoubleArray) {
     constructor(vararg numbers: Number): this(numbers.map { it.toDouble() }.toDoubleArray())
     constructor(numbers: List<Number>): this(numbers.map { it.toDouble() }.toDoubleArray())
@@ -92,3 +95,45 @@ class Matrix(vararg val rows: Row) {
         ).transpose()
     }
 }
+
+fun translation(x: Number, y: Number, z: Number) = Matrix(
+    Row(1, 0, 0, x),
+    Row(0, 1, 0, y),
+    Row(0, 0, 1, z),
+    Row(0, 0, 0, 1)
+)
+
+fun scaling(x: Number, y: Number, z: Number) = Matrix(
+    Row(x, 0, 0, 0),
+    Row(0, y, 0, 0),
+    Row(0, 0, z, 0),
+    Row(0, 0, 0, 1)
+)
+
+fun rotationX(r: Double) = Matrix(
+    Row(1, 0, 0, 0),
+    Row(0, cos(r), -sin(r), 0),
+    Row(0, sin(r), cos(r), 0),
+    Row(0, 0, 0, 1)
+)
+
+fun rotationY(r: Double) = Matrix(
+    Row(cos(r), 0, sin(r), 0),
+    Row(0, 1, 0, 0),
+    Row(-sin(r), 0, cos(r), 0),
+    Row(0, 0, 0, 1)
+)
+
+fun rotationZ(r: Double) = Matrix(
+    Row(cos(r), -sin(r), 0, 0),
+    Row(sin(r), cos(r), 0, 0),
+    Row(0, 0, 1, 0),
+    Row(0, 0, 0, 1)
+)
+
+fun shearing(xOnY: Number, xOnZ: Number, yOnX: Number, yOnZ: Number, zOnX: Number, zOnY: Number) = Matrix(
+    Row(1, xOnY, xOnZ, 0),
+    Row(yOnX, 1, yOnZ, 0),
+    Row(zOnX, zOnY, 1, 0),
+    Row(0, 0, 0, 1)
+)

@@ -3,6 +3,8 @@ package test.geometry
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
+import kotlin.math.PI
+import kotlin.math.sqrt
 
 class MatrixSpec  : FunSpec({
 
@@ -333,4 +335,131 @@ class MatrixSpec  : FunSpec({
         (c * b.inverse()).shouldBe(a)
     }
 
+    test("Multiplying by a translation matrix") {
+        val transform = translation(5, -3, 2)
+        val p = point(-3, 4, 5)
+
+        (transform * p).shouldBe(point(2, 1, 7))
+    }
+
+    test("Multiplying by the inverse of a translation matrix") {
+        val transform = translation(5, -3, 2)
+        val inv = transform.inverse()
+        val p = point(-3, 4, 5)
+
+        (inv * p).shouldBe(point(-8, 7, 3))
+    }
+
+    test("Translations do not affect vectors") {
+        val transform = translation(5, -3, 2)
+        val v = vector(-3, 4, 5)
+
+        (transform * v).shouldBe(v)
+    }
+
+    test("A scaling matrix applied to a point") {
+        val transform = scaling(2, 3, 4)
+        val p = point(-4, 6, 8)
+
+        (transform * p).shouldBe(point(-8, 18, 32))
+    }
+
+    test("A scaling matrix applied to a vector") {
+        val transform = scaling(2, 3, 4)
+        val v = vector(-4, 6, 8)
+
+        (transform * v).shouldBe(vector(-8, 18, 32))
+    }
+
+    test("Multiplying by the inverse of a scaling matrix") {
+        val transform = scaling(2, 3, 4)
+        val inv = transform.inverse()
+        val v = vector(-4, 6, 8)
+
+        (inv * v).shouldBe(vector(-2, 2, 2))
+    }
+
+    test("Reflection is scaling by a negative value") {
+        val transform = scaling(-1, 1, 1)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(-2, 3, 4))
+    }
+
+    test("Rotating a point around the x axis") {
+        val p = point(0, 1, 0)
+        val halfQuarter =  rotationX(PI / 4)
+        val fullQuarter = rotationX(PI /2)
+
+        (halfQuarter * p).shouldBe(point(0, sqrt(2.0) / 2, sqrt(2.0) / 2))
+        (fullQuarter * p).shouldBe(point(0, 0, 1))
+    }
+
+    test("The inverse of an x-rotation rotates in the opposite direction") {
+        val p = point(0, 1, 0)
+        val halfQuarter =  rotationX(PI / 4)
+        val inv = halfQuarter.inverse()
+
+        (inv * p).shouldBe(point(0, sqrt(2.0) / 2, -sqrt(2.0) / 2))
+    }
+
+    test("Rotating a point around the y axis") {
+        val p = point(0, 0, 1)
+        val halfQuarter =  rotationY(PI / 4)
+        val fullQuarter = rotationY(PI /2)
+
+        (halfQuarter * p).shouldBe(point(sqrt(2.0) / 2, 0, sqrt(2.0) / 2))
+        (fullQuarter * p).shouldBe(point(1, 0, 0))
+    }
+
+    test("Rotating a point around the z axis") {
+        val p = point(0, 1, 0)
+        val halfQuarter =  rotationZ(PI / 4)
+        val fullQuarter = rotationZ(PI /2)
+
+        (halfQuarter * p).shouldBe(point(-sqrt(2.0) / 2, sqrt(2.0) / 2, 0))
+        (fullQuarter * p).shouldBe(point(-1, 0, 0))
+    }
+
+    test("A shearing transformation moves x in proportion to y") {
+        val transform = shearing(1, 0, 0, 0, 0, 0)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(5, 3, 4))
+    }
+
+    test("A shearing transformation moves x in proportion to z") {
+        val transform = shearing(0, 1, 0, 0, 0, 0)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(6, 3, 4))
+    }
+
+    test("A shearing transformation moves y in proportion to x") {
+        val transform = shearing(0, 0, 1, 0, 0, 0)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(2, 5, 4))
+    }
+
+    test("A shearing transformation moves y in proportion to z") {
+        val transform = shearing(0, 0, 0, 1, 0, 0)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(2, 7, 4))
+    }
+
+    test("A shearing transformation moves z in proportion to x") {
+        val transform = shearing(0, 0, 0, 0, 1, 0)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(2, 3, 6))
+    }
+
+    test("A shearing transformation moves z in proportion to y") {
+        val transform = shearing(0, 0, 0, 0, 0, 1)
+        val p = point(2, 3, 4)
+
+        (transform * p).shouldBe(point(2, 3, 7))
+    }
 })
