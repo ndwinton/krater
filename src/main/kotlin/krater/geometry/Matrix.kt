@@ -94,6 +94,14 @@ class Matrix(vararg val rows: Row) {
                 Row(row.values.mapIndexed { colIndex, _ -> cofactor(rowIndex, colIndex) / det })}
         ).transpose()
     }
+
+    fun rotateX(r: Double) = rotationX(r) * this
+    fun rotateY(r: Double) = rotationY(r) * this
+    fun rotateZ(r: Double) = rotationZ(r) * this
+    fun translate(x: Number, y: Number, z: Number) = translation(x, y, z) * this
+    fun scale(x: Number, y: Number, z: Number) = scaling(x, y, z) * this
+    fun shear(xOnY: Number, xOnZ: Number, yOnX: Number, yOnZ: Number, zOnX: Number, zOnY: Number)
+            = shearing(xOnY, xOnZ, yOnX, yOnZ, zOnX, zOnY) * this
 }
 
 fun translation(x: Number, y: Number, z: Number) = Matrix(

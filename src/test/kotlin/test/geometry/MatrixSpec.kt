@@ -462,4 +462,50 @@ class MatrixSpec  : FunSpec({
 
         (transform * p).shouldBe(point(2, 3, 7))
     }
+
+    test("Individual transformations are applied in sequence") {
+        val p = point(1, 0, 1)
+        val a = rotationX(PI / 2)
+        val b = scaling(5, 5, 5)
+        val c = translation(10, 5, 7)
+
+        // Apply rotation first
+        val p2 = a * p
+        p2.shouldBe(point(1, -1, 0))
+
+        // Then scaling
+        val p3 = b * p2
+        p3.shouldBe(point(5, -5, 0))
+
+        // The translation
+        val p4 = c * p3
+        p4.shouldBe(point(15, 0, 7))
+    }
+
+    test("Chained transformations must be applied in reverse order") {
+        val p = point(1, 0, 1)
+        val a = rotationX(PI / 2)
+        val b = scaling(5, 5, 5)
+        val c = translation(10, 5, 7)
+
+        val t = c * b * a
+
+        (t * p).shouldBe(point(15, 0, 7))
+    }
+
+    test("Fluent transformation chaining") {
+        val transform = IDENTITY_4X4_MATRIX
+            .rotateX(PI / 2)
+            .rotateY(PI)
+            .rotateY(-PI)
+            .rotateZ(PI)
+            .rotateZ(-PI)
+            .scale(5, 5, 5)
+            .shear(1, 0, 0, 0, 0,0)
+            .shear(-1, 0, 0, 0, 0, 0)
+            .translate(10, 5, 7)
+        val p = point(1, 0, 1)
+
+        (transform * p).shouldBe(point(15, 0, 7))
+    }
 })
