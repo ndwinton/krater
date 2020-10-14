@@ -1,8 +1,8 @@
 package krater.geometry
 
-class Row(vararg val values: Double) {
-    constructor(vararg numbers: Number): this(*(numbers.map { it.toDouble() }.toDoubleArray()))
-    constructor(numbers: List<Number>): this(*numbers.toTypedArray())
+class Row(val values: DoubleArray) {
+    constructor(vararg numbers: Number): this(numbers.map { it.toDouble() }.toDoubleArray())
+    constructor(numbers: List<Number>): this(numbers.map { it.toDouble() }.toDoubleArray())
 
     operator fun get(col: Int) = values[col]
 
@@ -22,7 +22,7 @@ class Row(vararg val values: Double) {
     fun dot(other: Row) = values.zip(other.values).map { it.first * it.second }.sum()
 
     override fun toString(): String {
-        return "${values.contentToString()}"
+        return values.contentToString()
     }
 }
 
@@ -74,9 +74,8 @@ class Matrix(vararg val rows: Row) {
     }
 
     fun transpose() = Matrix(rows.mapIndexed { index, _ -> columnAsRow(index) })
-    fun determinant(): Double {
-        return rows[0][0] * rows[1][1] - rows[0][1] * rows[1][0]
-    }
+    fun determinant(): Double = if (rows.size == 2) rows[0][0] * rows[1][1] - rows[0][1] * rows[1][0]
+    else rows[0].values.foldIndexed(0.0) { index, det, value -> det + value * cofactor(0, index) }
 
     fun subMatrix(row: Int, col: Int) = Matrix(
         rows.filterIndexed { index, _ -> index != row }
@@ -84,4 +83,12 @@ class Matrix(vararg val rows: Row) {
 
     fun minor(row: Int, col: Int) = subMatrix(row, col).determinant()
     fun cofactor(row: Int, col: Int) = if ((row + col) % 2 == 1) -minor(row, col) else minor(row, col)
+    fun invertible() = !determinant().near(0.0)
+    fun inverse(): Matrix {
+        val det = determinant()
+        return Matrix(
+            rows.mapIndexed { rowIndex, row ->
+                Row(row.values.mapIndexed { colIndex, _ -> cofactor(rowIndex, colIndex) / det })}
+        ).transpose()
+    }
 }

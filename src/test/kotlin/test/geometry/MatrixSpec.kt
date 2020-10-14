@@ -2,10 +2,7 @@ package test.geometry
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import krater.geometry.IDENTITY_4X4_MATRIX
-import krater.geometry.Matrix
-import krater.geometry.Row
-import krater.geometry.Tuple
+import krater.geometry.*
 
 class MatrixSpec  : FunSpec({
 
@@ -210,4 +207,130 @@ class MatrixSpec  : FunSpec({
         a.minor(1, 0).shouldBe(25.0)
         a.cofactor(1, 0).shouldBe(-25.0)
     }
+
+    test("Calculating the determinant of a 3x3 matrix") {
+        val a = Matrix(
+            Row(1, 2, 6),
+            Row(-5, 8, -4),
+            Row(2, 6, 4)
+        )
+
+        a.cofactor(0, 0).shouldBe(56.0)
+        a.cofactor(0, 1).shouldBe(12.0)
+        a.cofactor(0, 2).shouldBe(-46.0)
+        a.determinant().shouldBe(-196.0)
+    }
+
+    test("Calculating the determinant of a 4x4 matrix") {
+        val a = Matrix(
+            Row(-2, -8, 3, 5),
+            Row(-3, 1, 7, 3),
+            Row(1, 2, -9, 6),
+            Row(-6, 7, 7, -9)
+        )
+
+        a.cofactor(0, 0).shouldBe(690.0)
+        a.cofactor(0, 1).shouldBe(447.0)
+        a.cofactor(0, 2).shouldBe(210.0)
+        a.cofactor(0, 3).shouldBe(51.0)
+        a.determinant().shouldBe(-4071.0)
+    }
+
+    test("Testing an invertible matrix for invertibility") {
+        val a = Matrix(
+            Row(6, 4, 4, 4),
+            Row(5, 5, 7, 6),
+            Row(4, -9, 3, -7),
+            Row(9, 1, 7, -6)
+        )
+
+        a.determinant().shouldBe(-2120.0)
+        a.invertible().shouldBe(true)
+    }
+
+    test("Testing a noninvertible matrix for invertibility") {
+        val a = Matrix(
+            Row(-4, 2, -2, -3),
+            Row(9, 6, 2, 6),
+            Row(0, -5, 1, -5),
+            Row(0, 0, 0, 0)
+        )
+
+        a.determinant().shouldBe(0.0)
+        a.invertible().shouldBe(false)
+    }
+
+    test("Calculating the inverse of a matrix") {
+        val a = Matrix(
+            Row(-5, 2, 6, -8),
+            Row(1, -5, 1, 8),
+            Row(7, 7, -6, -7),
+            Row(1, -3, 7, 4)
+        )
+
+        val b = a.inverse()
+
+        a.determinant().shouldBe(532.0)
+        a.cofactor(2, 3).shouldBe(-160.0)
+        b[3, 2].near(-160.0 / 532.0).shouldBe(true)
+        a.cofactor(3, 2).shouldBe(105.0)
+        b[2, 3].near(105.0 / 532.0)
+        b.shouldBe(Matrix(
+            Row( 0.21805,  0.45113,  0.24060, -0.04511),
+            Row(-0.80827, -1.45677, -0.44361,  0.52068),
+            Row(-0.07895, -0.22368, -0.05263,  0.19737),
+            Row(-0.52256, -0.81391, -0.30075,  0.30639)
+        ))
+    }
+
+    test("Calculating the inverse of another matrix") {
+        val a = Matrix(
+            Row(8, -5, 9, 2),
+            Row(7, 5, 6, 1),
+            Row(-6, 0, 9, 6),
+            Row(-3, 0, -9, -4)
+        )
+
+        a.inverse().shouldBe(Matrix(
+            Row(-0.15385, -0.15385, -0.28205, -0.53846),
+            Row(-0.07692,  0.12308,  0.02564,  0.03077),
+            Row( 0.35897,  0.35897,  0.43590,  0.92308),
+            Row(-0.69231, -0.69231, -0.76923, -1.92308)
+        ))
+    }
+
+    test("Calculating the inverse of a third matrix") {
+        val a = Matrix(
+            Row(9, 3, 0, 9),
+            Row(-5, -2, -6, -3),
+            Row(-4, 9, 6, 4),
+            Row(-7, 6, 6, 2)
+        )
+
+        a.inverse().shouldBe(Matrix(
+            Row( -0.04074, -0.07778, 0.14444, -0.22222),
+            Row( -0.07778, 0.03333, 0.36667, -0.33333),
+            Row( -0.02901, -0.14630, -0.10926, 0.12963),
+            Row( 0.17778, 0.06667, -0.26667, 0.33333),
+        ))
+    }
+
+    test("Multiplying a matrix by its inverse") {
+        val a = Matrix(
+            Row(8, -5, 9, 2),
+            Row(7, 5, 6, 1),
+            Row(-6, 0, 9, 6),
+            Row(-3, 0, -9, -4)
+        )
+        val b = Matrix(
+            Row(9, 3, 0, 9),
+            Row(-5, -2, -6, -3),
+            Row(-4, 9, 6, 4),
+            Row(-7, 6, 6, 2)
+        )
+
+        val c = a * b
+        (c * b.inverse()).shouldBe(a)
+    }
+
 })
