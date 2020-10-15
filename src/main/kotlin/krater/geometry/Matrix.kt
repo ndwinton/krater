@@ -40,15 +40,14 @@ class Matrix(vararg val rows: Row) {
     constructor(rows: List<Row>): this(*rows.toTypedArray())
 
     operator fun get(row: Int, col: Int) = rows[row][col]
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as Matrix
 
-        if (!rows.contentEquals(other.rows)) return false
-
-        return true
+        return rows.contentEquals(other.rows)
     }
 
     override fun hashCode(): Int {
@@ -103,6 +102,8 @@ class Matrix(vararg val rows: Row) {
     fun shear(xOnY: Number, xOnZ: Number, yOnX: Number, yOnZ: Number, zOnX: Number, zOnY: Number)
             = shearing(xOnY, xOnZ, yOnX, yOnZ, zOnX, zOnY) * this
 }
+
+// These "bare" functions closely mirror the descriptions in the book
 
 fun translation(x: Number, y: Number, z: Number) = Matrix(
     Row(1, 0, 0, x),
