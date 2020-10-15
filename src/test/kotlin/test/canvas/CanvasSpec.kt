@@ -36,7 +36,17 @@ class CanvasSpec : FunSpec({
 
         ppm.split("\n")
             .subList(0, 3)
-            .shouldBe(listOf("PPM", "5 3", "255"))
+            .shouldBe(listOf("P3", "5 3", "255"))
+    }
+
+    test("Constructing the PPM header with other values") {
+        val c = Canvas(10, 4)
+
+        val ppm = c.toPPM()
+
+        ppm.split("\n")
+            .subList(0, 3)
+            .shouldBe(listOf("P3", "10 4", "255"))
     }
 
     test("Constructing the PPM pixel data") {

@@ -11,8 +11,8 @@ class Canvas(val width: Int, val height: Int) {
 
     fun toPPM(): String {
         return """
-            PPM
-            5 3
+            P3
+            ${width} ${height}
             255
         """.trimIndent() + "\n" + pixels.joinToString("\n") { row ->
             row.flatMap { pixel ->
