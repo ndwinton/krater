@@ -2,7 +2,10 @@ package krater.geometry
 
 import kotlin.math.sqrt
 
-class Sphere : Shape() {
+class Sphere(
+    transform: Matrix = IDENTITY_4X4_MATRIX,
+    material: Material = Material()
+) : Shape(transform = transform, material = material) {
 
     fun intersect(ray: Ray): List<Intersection> {
         val transformedRay = ray.transform(transform.inverse())
@@ -20,5 +23,14 @@ class Sphere : Shape() {
                 Intersection((-b + sqrt(discriminant)) / (2 * a), this)
             )
         }
+    }
+
+    override fun normalAt(point: Tuple): Tuple {
+        val inverse = transform.inverse()
+        val objectPoint = inverse * point
+        val objectNormal = objectPoint - point(0, 0, 0)
+        val uncorrected = inverse.transpose() * objectNormal
+        val worldNormal = vector(uncorrected.x, uncorrected.y, uncorrected.z)
+        return worldNormal.normalize()
     }
 }

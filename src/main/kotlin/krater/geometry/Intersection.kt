@@ -1,6 +1,6 @@
 package krater.geometry
 
-data class Intersection(val t: Double, val obj: Shape)
+data class Intersection(val t: Double, val shape: Shape)
 
 val NO_INTERSECTION = Intersection(Double.NaN, object : Shape() {})
 

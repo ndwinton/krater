@@ -147,4 +147,22 @@ class TupleSpec : FunSpec({
         a.cross(b).shouldBe(vector(-1, 2, -1))
         b.cross(a).shouldBe(vector(1, -2, 1))
     }
+
+    test("Reflecting a vector approaching at 45º") {
+        val v = vector(1, -1, 0)
+        val n = vector(0, 1, 0)
+
+        val r = v.reflect(n)
+
+        r.shouldBe(vector(1, 1, 0))
+    }
+
+    test("Reflecting a vector of a slanted surface") {
+        val v = vector(0, -1, 0)
+        val n = vector(sqrt(2.0) / 2, sqrt(2.0) / 2, 0)
+
+        val r = v.reflect(n)
+
+        r.shouldBe(vector(1, 0, 0))
+    }
 })

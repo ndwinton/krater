@@ -6,6 +6,9 @@ import java.lang.Integer.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+val BLACK = Color(0.0, 0.0, 0.0)
+val WHITE = Color(1.0, 1.0, 1.0)
+
 class Color(val red: Double, val green: Double, val blue: Double) {
 
     override fun equals(other: Any?): Boolean {
@@ -35,4 +38,7 @@ class Color(val red: Double, val green: Double, val blue: Double) {
 
     private fun scale(value: Double, limit: Int) = max(0, min((limit * value).roundToInt(), limit))
     fun toScaledTriple(limit: Int) = Triple(scale(red, limit), scale(green, limit), scale(blue, limit))
+    override fun toString(): String {
+        return "Color(red=$red, green=$green, blue=$blue)"
+    }
 }

@@ -2,22 +2,29 @@ package krater
 
 import krater.canvas.Canvas
 import krater.canvas.Color
+import krater.canvas.WHITE
 import krater.geometry.*
 import java.io.File
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    val canvas = Canvas(100, 100)
-    val sphere = Sphere()
-    val red = Color(1.0, 0.0, 0.0)
+    val size = 1000
+    val canvas = Canvas(size, size)
+    val transform = IDENTITY_4X4_MATRIX.scale(size * 0.4, size * 0.2, size * 0.2).rotateZ(PI / 4).translate(size / 2, size / 2, 0)
+    val sphere = Sphere(transform = transform, material = Material(color = Color(1.0, 0.2, 1.0)))
+    val light = PointLight(position = point(0, size / 2, -size), intensity = WHITE)
 
-    sphere.transform = IDENTITY_4X4_MATRIX.scale(40, 20, 1).rotateZ(PI / 4).translate(50, 50, 0)
-    (0..99).forEach { x ->
-        (0..99).forEach { y ->
-            val ray = Ray(point(x, y, -10), vector(0, 0, 1))
-            val xs = sphere.intersect(ray)
-            if (xs.isNotEmpty()) {
-                canvas[x, y] = red
+    (0..(size - 1)).forEach { x ->
+        (0..(size - 1)).forEach { y ->
+            // Cheating by using a viewpoint a far enough away that all rays
+            // can be considered parallel.
+            val ray = Ray(point(x, y, -10000 * size), vector(0, 0, 1))
+            val hit = sphere.intersect(ray).hit()
+            if (hit != NO_INTERSECTION) {
+                val point = ray.position(hit.t)
+                val normal = hit.shape.normalAt(point)
+                val eye = -ray.direction
+                canvas[x, y] = hit.shape.material.lighting(light, point, eye, normal)
             }
         }
     }

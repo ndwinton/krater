@@ -48,6 +48,8 @@ class Tuple(val x: Double, val y: Double, val z: Double, val w: Double) {
         if (!isVector()) throw IllegalArgumentException("Cross product only valid on vectors")
         return vector(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
     }
+
+    fun reflect(normal: Tuple) = this - normal * 2 * this.dot(normal)
 }
 
 fun point(x: Number, y: Number, z: Number) = Tuple(x.toDouble(), y.toDouble(), z.toDouble(), 1.0)

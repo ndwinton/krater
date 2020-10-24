@@ -15,7 +15,7 @@ class IntersectionSpec : FunSpec({
         val i = Intersection(3.5, s)
 
         i.t.shouldBe(3.5)
-        i.obj.shouldBe(s)
+        i.shape.shouldBe(s)
     }
 
     test("The hit when all intersections have positive t") {
