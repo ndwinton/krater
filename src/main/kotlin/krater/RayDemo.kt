@@ -4,6 +4,7 @@ import krater.canvas.Canvas
 import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
+import krater.model.*
 import java.io.File
 import kotlin.math.PI
 

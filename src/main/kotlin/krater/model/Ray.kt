@@ -1,4 +1,7 @@
-package krater.geometry
+package krater.model
+
+import krater.geometry.Matrix
+import krater.geometry.Tuple
 
 class Ray(val origin: Tuple, val direction: Tuple) {
     fun position(t: Double): Tuple = origin + (direction * t)

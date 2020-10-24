@@ -1,5 +1,6 @@
-package krater.geometry
+package krater.model
 
+import krater.geometry.*
 import kotlin.math.sqrt
 
 class Sphere(

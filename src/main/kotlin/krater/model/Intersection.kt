@@ -1,4 +1,4 @@
-package krater.geometry
+package krater.model
 
 data class Intersection(val t: Double, val shape: Shape)
 

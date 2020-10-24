@@ -1,8 +1,9 @@
-package test.geometry
+package test.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
+import krater.model.Ray
 
 class RaySpec : FunSpec ({
 

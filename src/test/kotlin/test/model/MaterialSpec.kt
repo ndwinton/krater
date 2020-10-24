@@ -1,10 +1,10 @@
-package test.geometry
+package test.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.canvas.Color
-import krater.geometry.Material
-import krater.geometry.PointLight
+import krater.model.Material
+import krater.model.PointLight
 import krater.geometry.point
 import krater.geometry.vector
 import kotlin.math.sqrt

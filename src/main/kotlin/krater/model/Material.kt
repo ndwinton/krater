@@ -1,7 +1,10 @@
-package krater.geometry
+package krater.model
 
 import krater.canvas.BLACK
 import krater.canvas.Color
+import krater.geometry.Tuple
+import krater.geometry.near
+import krater.geometry.nearHash
 import kotlin.math.pow
 
 class Material(

@@ -1,11 +1,11 @@
-package test.geometry
+package test.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import krater.geometry.Intersection
-import krater.geometry.NO_INTERSECTION
-import krater.geometry.Sphere
-import krater.geometry.hit
+import krater.model.Intersection
+import krater.model.NO_INTERSECTION
+import krater.model.Sphere
+import krater.model.hit
 
 class IntersectionSpec : FunSpec({
 

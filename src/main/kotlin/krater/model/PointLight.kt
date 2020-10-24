@@ -1,6 +1,7 @@
-package krater.geometry
+package krater.model
 
 import krater.canvas.Color
+import krater.geometry.Tuple
 
 class PointLight(override val position: Tuple, override val intensity: Color) : Light {
     override fun equals(other: Any?): Boolean {

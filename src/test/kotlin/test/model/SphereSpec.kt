@@ -1,8 +1,12 @@
-package test.geometry
+package test.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
+import krater.model.Intersection
+import krater.model.Material
+import krater.model.Ray
+import krater.model.Sphere
 import kotlin.math.PI
 import kotlin.math.sqrt
 

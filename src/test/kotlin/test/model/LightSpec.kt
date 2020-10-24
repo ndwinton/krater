@@ -1,9 +1,9 @@
-package test.geometry
+package test.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.canvas.Color
-import krater.geometry.PointLight
+import krater.model.PointLight
 import krater.geometry.point
 
 class LightSpec : FunSpec({
