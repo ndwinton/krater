@@ -21,4 +21,10 @@ class PointLight(override val position: Tuple, override val intensity: Color) : 
         result = 31 * result + intensity.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "PointLight(position=$position, intensity=$intensity)"
+    }
+
+
 }

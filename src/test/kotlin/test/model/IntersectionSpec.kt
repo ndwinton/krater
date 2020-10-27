@@ -1,11 +1,12 @@
 package test.model
 
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
-import krater.model.Intersection
-import krater.model.NO_INTERSECTION
-import krater.model.Sphere
-import krater.model.hit
+import krater.geometry.point
+import krater.geometry.vector
+import krater.model.*
 
 class IntersectionSpec : FunSpec({
 
@@ -62,5 +63,41 @@ class IntersectionSpec : FunSpec({
         val i = xs.hit()
 
         i.shouldBe(i4)
+    }
+
+    test("Pre-computing the state of an intersection") {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val shape = Sphere()
+        val i = Intersection(4.0, shape)
+
+        val comps = PreparedComputation(i, r)
+
+        comps.intersection.shouldBe(i)
+        comps.point.shouldBe(point(0, 0, -1))
+        comps.eyev.shouldBe(vector(0, 0, -1))
+        comps.normalv.shouldBe(vector(0, 0, -1))
+    }
+
+    test("The hit, when an intersection occurs on the outside") {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val shape = Sphere()
+        val i = Intersection(4.0, shape)
+
+        val comps = PreparedComputation(i, r)
+
+        comps.inside.shouldBeFalse()
+    }
+
+    test("The hit, when an intersection occurs on the inside") {
+        val r = Ray(point(0, 0, 0), vector(0, 0, 1))
+        val shape = Sphere()
+        val i = Intersection(1.0, shape)
+
+        val comps = PreparedComputation(i, r)
+
+        comps.point.shouldBe(point(0, 0, 1))
+        comps.eyev.shouldBe(vector(0, 0, -1))
+        comps.inside.shouldBeTrue()
+        comps.normalv.shouldBe(vector(0, 0, -1))
     }
 })

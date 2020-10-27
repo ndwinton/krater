@@ -5,9 +5,10 @@ import krater.geometry.Matrix
 import krater.geometry.Tuple
 import krater.geometry.vector
 
-open class Shape(
-    val material: Material = Material(),
-    val transform: Matrix = IDENTITY_4X4_MATRIX
+abstract class Shape(
+    open val material: Material = Material(),
+    open val transform: Matrix = IDENTITY_4X4_MATRIX
 ) {
-    open fun normalAt(point: Tuple) = vector(0, 0, 0)
+    abstract fun normalAt(point: Tuple): Tuple
+    abstract fun intersect(ray: Ray): List<Intersection>
 }

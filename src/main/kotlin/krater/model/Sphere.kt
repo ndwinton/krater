@@ -4,11 +4,11 @@ import krater.geometry.*
 import kotlin.math.sqrt
 
 class Sphere(
-    transform: Matrix = IDENTITY_4X4_MATRIX,
-    material: Material = Material()
+    override val transform: Matrix = IDENTITY_4X4_MATRIX,
+    override val material: Material = Material()
 ) : Shape(transform = transform, material = material) {
 
-    fun intersect(ray: Ray): List<Intersection> {
+    override fun intersect(ray: Ray): List<Intersection> {
         val transformedRay = ray.transform(transform.inverse())
         val sphereToRay = transformedRay.origin - point(0, 0, 0)
         val a = transformedRay.direction.dot(transformedRay.direction)
@@ -33,5 +33,23 @@ class Sphere(
         val uncorrected = inverse.transpose() * objectNormal
         val worldNormal = vector(uncorrected.x, uncorrected.y, uncorrected.z)
         return worldNormal.normalize()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Sphere
+
+        if (transform != other.transform) return false
+        if (material != other.material) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = transform.hashCode()
+        result = 31 * result + material.hashCode()
+        return result
     }
 }
