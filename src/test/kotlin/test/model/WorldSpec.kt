@@ -13,8 +13,10 @@ import krater.geometry.vector
 import krater.model.*
 
 class WorldSpec : FunSpec ({
+    val light1 = PointLight(point(-10, 10, -10), WHITE)
+    val light2 = PointLight(point(10, 10, -10), WHITE)
     val defaultWorld = World(
-        light = PointLight(point(-10, 10, -10), WHITE),
+        lights = listOf(light1),
         objects = listOf(
             Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
             Sphere(transform = scaling(0.5, 0.5, 0.5))
@@ -25,7 +27,7 @@ class WorldSpec : FunSpec ({
         val w = World()
 
         w.objects.shouldBeEmpty()
-        w.light.shouldBe(DARKNESS)
+        w.lights.shouldBe(listOf(DARKNESS))
     }
 
     test("The default world") {
@@ -34,7 +36,7 @@ class WorldSpec : FunSpec ({
         val s1 = Sphere(material = material)
         val s2 = Sphere(transform = scaling(0.5, 0.5, 0.5))
 
-        defaultWorld.light.shouldBe(light)
+        defaultWorld.lights.shouldBe(listOf(light))
         defaultWorld.objects.shouldContainAll(s1, s2)
     }
 
@@ -58,8 +60,20 @@ class WorldSpec : FunSpec ({
         c.shouldBe(Color(0.38066, 0.47583, 0.2855))
     }
 
+    test("Shading an intersection, multiple lights") {
+        val w = World(defaultWorld, lights = listOf(light1, light2))
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val shape = w.objects[0]
+        val i = Intersection(4.0, shape)
+
+        val comps = PreparedComputation(i, r)
+        val c = w.shadeHit(comps)
+
+        c.shouldBe(Color(0.76132, 0.95166, 0.5710))
+    }
+
     test("Shading an intersection from the inside") {
-        val w = World(objects = defaultWorld.objects, light = PointLight(point(0, 0.25, 0), WHITE))
+        val w = World(defaultWorld, lights = listOf(PointLight(point(0, 0.25, 0), WHITE)))
         val r = Ray(point(0, 0, 0), vector(0, 0, 1))
         val shape = w.objects[1]
         val i = Intersection(0.5, shape)
@@ -68,6 +82,18 @@ class WorldSpec : FunSpec ({
         val c = w.shadeHit(comps)
 
         c.shouldBe(Color(0.90498, 0.90498, 0.90498))
+    }
+
+    test("Shading an intersection from the inside, multiple lights") {
+        val w = World(defaultWorld, lights = listOf(PointLight(point(0, 0.25, 0), WHITE), PointLight(point(0, -0.25, 0), WHITE)))
+        val r = Ray(point(0, 0, 0), vector(0, 0, 1))
+        val shape = w.objects[1]
+        val i = Intersection(0.5, shape)
+
+        val comps = PreparedComputation(i, r)
+        val c = w.shadeHit(comps)
+
+        c.shouldBe(Color(1.80996, 1.80996, 1.80996))
     }
 
     test("The color when a ray misses") {
@@ -88,13 +114,12 @@ class WorldSpec : FunSpec ({
 
     test("The color with an intersection behind the ray") {
         val w = World(
-            light = PointLight(point(-10, 10, -10), WHITE),
+            lights = listOf(PointLight(point(-10, 10, -10), WHITE)),
             objects = listOf(
                 Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2, ambient = 1.0)),
                 Sphere(transform = scaling(0.5, 0.5, 0.5), Material(ambient = 1.0))
             )
         )
-        val outer = w.objects.first()
         val inner = w.objects.last()
         val r = Ray(point(0, 0, 0.75), vector(0, 0, -1))
 
@@ -102,4 +127,37 @@ class WorldSpec : FunSpec ({
 
         c.shouldBe(inner.material.color)
     }
+
+    test("The color when a ray hits, with multiple lights") {
+        val dualLights = World(
+            lights = listOf(PointLight(point(-10, 10, -10), WHITE), PointLight(point(10, 10, -10), WHITE)),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5))
+            )
+        )
+
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+
+        val c = dualLights.colorAt(r)
+
+        c.shouldBe(Color(0.76132, 0.95166, 0.5710))
+    }
+
+    test("The color with multiple lights, intersection behind the ray") {
+        val w = World(
+            lights = listOf(PointLight(point(-10, 10, -10), WHITE), PointLight(point(10, 10, -10), WHITE)),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2, ambient = 1.0)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5), Material(ambient = 1.0))
+            )
+        )
+        val inner = w.objects.last()
+        val r = Ray(point(0, 0, 0.75), vector(0, 0, -1))
+
+        val c = w.colorAt(r)
+
+        c.shouldBe(inner.material.color + inner.material.color)
+    }
+
 })
