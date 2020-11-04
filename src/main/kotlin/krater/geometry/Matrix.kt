@@ -146,3 +146,16 @@ fun shearing(xOnY: Number, xOnZ: Number, yOnX: Number, yOnZ: Number, zOnX: Numbe
     Row(zOnX, zOnY, 1, 0),
     Row(0, 0, 0, 1)
 )
+
+fun viewTransform(from: Tuple, to: Tuple, up: Tuple): Matrix {
+    val forward = (to - from).normalize()
+    val left = forward.cross(up.normalize())
+    val trueUp = left.cross(forward)
+    val orientation = Matrix(
+        Row(left.x, left.y, left.z, 0),
+        Row(trueUp.x, trueUp.y, trueUp.z, 0),
+        Row(-forward.x, -forward.y, -forward.z, 0),
+        Row(0, 0, 0, 1)
+    )
+    return  orientation * translation(-from.x, -from.y, -from.z)
+}

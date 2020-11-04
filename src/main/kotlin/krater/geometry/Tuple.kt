@@ -44,7 +44,7 @@ class Tuple(val x: Double, val y: Double, val z: Double, val w: Double) {
     }
 
     fun dot(other: Tuple): Double = x * other.x + y * other.y + z * other.z + w * other.w
-    fun cross(other: Tuple): Any {
+    fun cross(other: Tuple): Tuple {
         if (!isVector()) throw IllegalArgumentException("Cross product only valid on vectors")
         return vector(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
     }

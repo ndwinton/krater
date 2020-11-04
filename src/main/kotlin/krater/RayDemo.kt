@@ -10,24 +10,66 @@ import kotlin.math.PI
 
 fun main(args: Array<String>) {
     val size = 1000
-    val canvas = Canvas(size, size)
-    val transform = IDENTITY_4X4_MATRIX.scale(size * 0.4, size * 0.2, size * 0.2).rotateZ(PI / 4).translate(size / 2, size / 2, 0)
-    val sphere = Sphere(transform = transform, material = Material(color = Color(1.0, 0.2, 1.0)))
-    val light = PointLight(position = point(0, size / 2, -size), intensity = WHITE)
+    val floor = Sphere(
+        transform = scaling(10, 0.01, 10),
+        material = Material(
+            color = Color(1.0, 0.9, 0.9),
+            specular = 0.0
+        )
+    )
 
-    (0..(size - 1)).forEach { x ->
-        (0..(size - 1)).forEach { y ->
-            // Cheating by using a viewpoint a far enough away that all rays
-            // can be considered parallel.
-            val ray = Ray(point(x, y, -10000 * size), vector(0, 0, 1))
-            val hit = sphere.intersect(ray).hit()
-            if (hit != NO_INTERSECTION) {
-                val point = ray.position(hit.t)
-                val normal = hit.shape.normalAt(point)
-                val eye = -ray.direction
-                canvas[x, y] = hit.shape.material.lighting(light, point, eye, normal)
-            }
-        }
-    }
+    val leftWall = Sphere(
+        transform = scaling(10, 0.01, 10)
+            .rotateX(PI / 2)
+            .rotateY(-PI / 4)
+            .translate(0, 0, 5),
+        material = floor.material
+    )
+    val rightWall = Sphere(
+        transform = scaling(10, 0.01, 10)
+            .rotateX(PI / 2)
+            .rotateY(PI / 4)
+            .translate(0, 0, 5),
+        material = floor.material
+    )
+
+    val middle = Sphere(
+        transform = translation(-0.5, 1, 0.5),
+        material = Material(
+            color = Color(0.1, 1.0, 0.5),
+            diffuse = 0.7,
+            specular = 0.3
+        )
+    )
+
+    val right = Sphere(
+        transform = scaling(0.5, 0.5, 0.5)
+            .translate(1.5, 0.5, 0.5),
+        material = Material(
+            color = Color(0.5, 1.0, 0.1),
+            diffuse = 0.7,
+            specular = 0.3
+        )
+    )
+
+    val left = Sphere(
+        transform = scaling(0.33, 0.33, 0.33)
+            .translate(-1.5, 0.33, -0.75),
+        material = Material(
+            color = Color(1.0, 0.8, 0.1),
+            diffuse = 0.7,
+            specular = 0.3
+        )
+    )
+
+    val world = World(
+        lights = listOf(PointLight(point(-10, 10, -10), Color(1.0, 1.0, 1.0))),
+        objects = listOf(floor, leftWall, rightWall, left, middle, right)
+    )
+
+    val camera = Camera(1000, 500, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
+
+    val canvas = camera.render(world)
+
     File("ray.ppm").writeText(canvas.toPPM())
 }
