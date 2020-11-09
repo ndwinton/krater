@@ -2,6 +2,7 @@ package krater.model
 
 import krater.canvas.BLACK
 import krater.canvas.Color
+import krater.geometry.Tuple
 
 
 class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = listOf(DARKNESS)) {
@@ -11,11 +12,27 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
     fun intersect(ray: Ray): List<Intersection> = objects.flatMap { it.intersect(ray) }.sortedBy { it.t }
     fun shadeHit(computation: PreparedComputation) =
         lights.fold(BLACK) { color, light ->
-            color + computation.intersection.shape.material.lighting(light, computation.point, computation.eyev, computation.normalv)
+            color + computation.intersection.shape.material.lighting(
+                light,
+                computation.point,
+                computation.eyev,
+                computation.normalv,
+                isShadowed(light, computation.overPoint)
+            )
         }
 
     fun colorAt(ray: Ray): Color {
         val hit = intersect(ray).hit()
         return if (hit == NO_INTERSECTION) BLACK else shadeHit(PreparedComputation(hit, ray))
+    }
+
+    fun isShadowed(light: Light, point: Tuple): Boolean {
+        val vector = light.position - point
+        val distance = vector.magnitude()
+        val direction = vector.normalize()
+        val ray = Ray(point, direction)
+        val intersections = intersect(ray)
+        val hit = intersections.hit()
+        return hit != NO_INTERSECTION && hit.t < distance
     }
 }

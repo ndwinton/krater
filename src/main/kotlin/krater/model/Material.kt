@@ -38,13 +38,13 @@ class Material(
         return result
     }
 
-    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple): Color {
+    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean): Color {
         val lightv = (light.position - position).normalize()
         val reflectv = -(lightv.reflect(normalv))
         val effectiveColor = color * light.intensity
         val effectiveAmbient = effectiveColor * ambient
 
-        if (isLightBehindSurface(lightv, normalv)) {
+        if (isLightBehindSurface(lightv, normalv) || inShadow) {
             return effectiveAmbient
         }
 

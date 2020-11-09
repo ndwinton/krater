@@ -3,13 +3,13 @@ package test.model
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.doubles.shouldBeGreaterThan
+import io.kotest.matchers.doubles.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.canvas.WHITE
-import krater.geometry.point
-import krater.geometry.scaling
-import krater.geometry.vector
+import krater.geometry.*
 import krater.model.*
 
 class WorldSpec : FunSpec ({
@@ -160,4 +160,59 @@ class WorldSpec : FunSpec ({
         c.shouldBe(inner.material.color + inner.material.color)
     }
 
+    test("There is no shadow when nothing is collinear with point and light") {
+        defaultWorld.isShadowed(light1, point(0, 10, 0)).shouldBe(false)
+    }
+
+    test("The shadow when an object is between the point and the light") {
+        defaultWorld.isShadowed(light1, point(10, -10, 10)).shouldBe(true)
+    }
+
+    test("There is no shadow when an object is behind the light") {
+        defaultWorld.isShadowed(light1, point(-20, 20, -20)).shouldBe(false)
+    }
+
+    test("There is no shadow when an object is behind the point") {
+        defaultWorld.isShadowed(light1, point(-2, 2, -2)).shouldBe(false)
+    }
+
+    test("shadeHit is given an intersection in shadow") {
+        val s1 = Sphere()
+        val s2 = Sphere(transform = translation(0, 0, 10))
+        val w = World(
+            lights = listOf(PointLight(point(0, 0, -10), WHITE)),
+            objects = listOf(s1, s2)
+        )
+        val r = Ray(point(0, 0, 5), vector(0, 0, 1))
+        val i = Intersection(4.0, s2)
+        val comps = PreparedComputation(i, r)
+        val c = w.shadeHit(comps)
+
+        c.shouldBe(Color(0.1, 0.1, 0.1))
+    }
+
+    test("The hit should offset the point") {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val shape = Sphere(translation(0, 0, 1))
+        val i = Intersection(5.0, shape)
+        val comps = PreparedComputation(i, r)
+
+        comps.overPoint.z.shouldBeLessThan(-EPSILON / 2)
+        comps.point.z.shouldBeGreaterThan(comps.overPoint.z)
+    }
+
+    test("shadeHit is given an intersection in shadow from one of multiple lights") {
+        val s1 = Sphere()
+        val s2 = Sphere(transform = translation(0, 0, 10))
+        val w = World(
+            lights = listOf(PointLight(point(0, 0, -10), WHITE), PointLight(point(0, 10, 5), WHITE)),
+            objects = listOf(s1, s2)
+        )
+        val r = Ray(point(0, 0, 5), vector(0, 0, 1))
+        val i = Intersection(4.0, s2)
+        val comps = PreparedComputation(i, r)
+        val c = w.shadeHit(comps)
+
+        c.shouldBe(Color(0.53425, 0.53425, 0.53425))
+    }
 })

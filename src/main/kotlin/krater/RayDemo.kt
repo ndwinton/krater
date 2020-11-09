@@ -9,7 +9,7 @@ import java.io.File
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    val size = 1000
+    val size = 250
     val floor = Sphere(
         transform = scaling(10, 0.01, 10),
         material = Material(
@@ -63,11 +63,14 @@ fun main(args: Array<String>) {
     )
 
     val world = World(
-        lights = listOf(PointLight(point(-10, 10, -10), Color(1.0, 1.0, 1.0))),
+        lights = listOf(
+            PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
+            PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
+        ),
         objects = listOf(floor, leftWall, rightWall, left, middle, right)
     )
 
-    val camera = Camera(1000, 500, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
+    val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
 
     val canvas = camera.render(world)
 
