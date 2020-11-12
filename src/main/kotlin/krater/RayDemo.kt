@@ -10,31 +10,15 @@ import kotlin.math.PI
 
 fun main(args: Array<String>) {
     val size = 250
-    val floor = Sphere(
-        transform = scaling(10, 0.01, 10),
+    val floor = Plane(
         material = Material(
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0
         )
     )
 
-    val leftWall = Sphere(
-        transform = scaling(10, 0.01, 10)
-            .rotateX(PI / 2)
-            .rotateY(-PI / 4)
-            .translate(0, 0, 5),
-        material = floor.material
-    )
-    val rightWall = Sphere(
-        transform = scaling(10, 0.01, 10)
-            .rotateX(PI / 2)
-            .rotateY(PI / 4)
-            .translate(0, 0, 5),
-        material = floor.material
-    )
-
     val middle = Sphere(
-        transform = translation(-0.5, 1, 0.5),
+        transform = translation(-0.5, 0.5, 0.5),
         material = Material(
             color = Color(0.1, 1.0, 0.5),
             diffuse = 0.7,
@@ -67,7 +51,7 @@ fun main(args: Array<String>) {
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, leftWall, rightWall, left, middle, right)
+        objects = listOf(floor, left, middle, right)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
