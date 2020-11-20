@@ -4,8 +4,8 @@ import krater.geometry.*
 import kotlin.math.sqrt
 
 class Sphere(
-    override val transform: Matrix = IDENTITY_4X4_MATRIX,
-    override val material: Material = Material()
+    transform: Matrix = IDENTITY_4X4_MATRIX,
+    material: Material = Material()
 ) : Shape(transform = transform, material = material) {
 
     override fun localIntersect(objectSpaceRay: Ray): List<Intersection> {
@@ -25,7 +25,7 @@ class Sphere(
         }
     }
 
-     override fun localNormalAt(objectPoint: Tuple): Tuple = objectPoint - point(0, 0, 0)
+    override fun localNormalAt(objectPoint: Tuple): Tuple = objectPoint - point(0, 0, 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

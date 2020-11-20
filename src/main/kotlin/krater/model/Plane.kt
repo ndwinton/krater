@@ -3,8 +3,8 @@ package krater.model
 import krater.geometry.*
 
 class Plane(
-    override val transform: Matrix = IDENTITY_4X4_MATRIX,
-    override val material: Material = Material()
+    transform: Matrix = IDENTITY_4X4_MATRIX,
+    material: Material = Material()
 ) : Shape(transform = transform, material = material) {
 
     override fun localNormalAt(objectPoint: Tuple): Tuple = vector(0, 1, 0)

@@ -2,11 +2,14 @@ package test.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import krater.canvas.BLACK
 import krater.canvas.Color
+import krater.canvas.WHITE
 import krater.model.Material
 import krater.model.PointLight
 import krater.geometry.point
 import krater.geometry.vector
+import krater.model.StripePattern
 import kotlin.math.sqrt
 
 class MaterialSpec : FunSpec({
@@ -69,5 +72,23 @@ class MaterialSpec : FunSpec({
         val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
 
         m.lighting(light, position, eyev, normalv, inShadow = true).shouldBe(Color(0.1, 0.1, 0.1))
+    }
+
+    test("Lighting with a pattern applied") {
+        val m = Material(
+            pattern = StripePattern(WHITE, BLACK),
+            ambient = 1.0,
+            diffuse = 0.0,
+            specular = 0.0,
+        )
+        val eyev = vector(0, 0, -1)
+        val normalv = vector(0, 0, -1)
+        val light = PointLight(point(0, 0, -10), WHITE)
+
+        val c1 = m.lighting(light, point(0.9, 0, 0), eyev, normalv, false)
+        val c2 = m.lighting(light, point(1.1, 0, 0), eyev, normalv, false)
+
+        c1.shouldBe(WHITE)
+        c2.shouldBe(BLACK)
     }
 })

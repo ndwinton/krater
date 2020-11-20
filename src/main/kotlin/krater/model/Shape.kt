@@ -1,23 +1,27 @@
 package krater.model
 
+import krater.canvas.BLACK
+import krater.canvas.Color
 import krater.geometry.*
+import kotlin.math.pow
 
 abstract class Shape(
-    open val material: Material = Material(),
-    open val transform: Matrix = IDENTITY_4X4_MATRIX
+    val material: Material = Material(),
+    val transform: Matrix = IDENTITY_4X4_MATRIX
 ) {
+    val inverseTransform = transform.inverse()
+
     fun normalAt(point: Tuple): Tuple {
-        val inverse = transform.inverse()
-        val objectPoint = inverse * point
+        val objectPoint = inverseTransform * point
         val objectNormal = localNormalAt(objectPoint)
-        val uncorrected = inverse.transpose() * objectNormal
+        val uncorrected = inverseTransform.transpose() * objectNormal
         val worldNormal = vector(uncorrected.x, uncorrected.y, uncorrected.z)
         return worldNormal.normalize()
     }
     abstract fun localNormalAt(objectPoint: Tuple): Tuple
 
     fun intersect(ray: Ray): List<Intersection> {
-        val objectSpaceRay = ray.transform(transform.inverse())
+        val objectSpaceRay = ray.transform(inverseTransform)
         return localIntersect(objectSpaceRay)
     }
 

@@ -1,8 +1,6 @@
 package krater
 
-import krater.canvas.Canvas
 import krater.canvas.Color
-import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import java.io.File
@@ -22,7 +20,12 @@ fun main(args: Array<String>) {
         material = Material(
             color = Color(0.1, 1.0, 0.5),
             diffuse = 0.7,
-            specular = 0.3
+            specular = 0.3,
+            pattern = StripePattern(
+                Color(1.0, 0.0, 0.0),
+                Color(1.0, 0.5, 0.5),
+                scaling(0.5, 0.5, 0.5).rotateZ(PI / 4)
+            )
         )
     )
 

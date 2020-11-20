@@ -12,7 +12,8 @@ class Material(
     val color: Color = Color(1.0, 1.0, 1.0),
     val diffuse: Double = 0.9,
     val shininess: Double = 200.0,
-    val specular: Double = 0.9
+    val specular: Double = 0.9,
+    val pattern: Pattern = SolidPattern(color)
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -38,10 +39,10 @@ class Material(
         return result
     }
 
-    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean): Color {
+    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean, shape: Shape = Sphere()): Color {
         val lightv = (light.position - position).normalize()
         val reflectv = -(lightv.reflect(normalv))
-        val effectiveColor = color * light.intensity
+        val effectiveColor = pattern.colorAtObject(shape, position) * light.intensity
         val effectiveAmbient = effectiveColor * ambient
 
         if (isLightBehindSurface(lightv, normalv) || inShadow) {
