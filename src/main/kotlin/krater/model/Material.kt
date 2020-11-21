@@ -26,6 +26,7 @@ class Material(
         if (!diffuse.near(other.diffuse)) return false
         if (!shininess.near(other.shininess)) return false
         if (!specular.near(other.specular)) return false
+        if (pattern != other.pattern) return false
 
         return true
     }
@@ -36,13 +37,14 @@ class Material(
         result = 31 * result + diffuse.nearHash()
         result = 31 * result + shininess.nearHash()
         result = 31 * result + specular.nearHash()
+        result = 31 * result + pattern.hashCode()
         return result
     }
 
-    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean, shape: Shape = Sphere()): Color {
+    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean): Color {
         val lightv = (light.position - position).normalize()
         val reflectv = -(lightv.reflect(normalv))
-        val effectiveColor = pattern.colorAtObject(shape, position) * light.intensity
+        val effectiveColor = pattern.colorAtObject(position) * light.intensity
         val effectiveAmbient = effectiveColor * ambient
 
         if (isLightBehindSurface(lightv, normalv) || inShadow) {

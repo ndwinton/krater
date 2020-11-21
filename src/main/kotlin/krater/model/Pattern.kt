@@ -10,8 +10,8 @@ abstract class Pattern(val transform: Matrix = IDENTITY_4X4_MATRIX) {
 
     abstract fun colorAt(point: Tuple): Color
 
-    open fun colorAtObject(obj: Shape, point: Tuple): Color {
-        val objectPoint = obj.inverseTransform * point
+    // Modified from book definition - objectPoint assumed transformed into object space
+    open fun colorAtObject(objectPoint: Tuple): Color {
         val patternPoint = inverseTransform * objectPoint
         return colorAt(patternPoint)
     }

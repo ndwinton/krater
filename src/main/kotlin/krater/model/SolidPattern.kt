@@ -7,7 +7,7 @@ import krater.geometry.Tuple
 
 class SolidPattern(val color: Color, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
     override fun colorAt(point: Tuple): Color = color
-    override fun colorAtObject(obj: Shape, point: Tuple): Color = color
+    override fun colorAtObject(objectPoint: Tuple): Color = color
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

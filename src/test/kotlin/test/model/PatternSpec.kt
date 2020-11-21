@@ -50,20 +50,10 @@ class PatternSpec : FunSpec ({
         pattern.colorAt(point(-1.1, 0, 0)).shouldBe(WHITE)
     }
 
-    test("Stripes with an object transformation") {
-        val obj = Sphere(transform = scaling(2, 2, 2))
-        val pattern = StripePattern(WHITE, BLACK)
-
-        val c = pattern.colorAtObject(obj, point(1.5, 0, 0))
-
-        c.shouldBe(WHITE)
-    }
-
     test("Stripes with a pattern transformation") {
-        val obj = Sphere(transform = scaling(2, 2, 2))
         val pattern = StripePattern(WHITE, BLACK, transform = translation(0.5, 0, 0))
 
-        val c = pattern.colorAtObject(obj, point(2.5, 0, 0))
+        val c = pattern.colorAtObject(point(2.5, 0, 0))
 
         c.shouldBe(WHITE)
     }
