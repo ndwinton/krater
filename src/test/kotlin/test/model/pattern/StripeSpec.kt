@@ -1,26 +1,23 @@
-package test.model
+package test.model.pattern
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
-import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
-import krater.model.Pattern
-import krater.model.Sphere
-import krater.model.StripePattern
+import krater.model.pattern.Stripe
 
-class StripePatternSpec : FunSpec ({
+class StripeSpec : FunSpec ({
 
     test("Creating a stripe pattern") {
-        val pattern = StripePattern(WHITE, BLACK)
+        val pattern = Stripe(WHITE, BLACK)
 
         pattern.a.shouldBe(WHITE)
         pattern.b.shouldBe(BLACK)
     }
 
     test("A stripe pattern is constant in y") {
-        val pattern = StripePattern(WHITE, BLACK)
+        val pattern = Stripe(WHITE, BLACK)
 
         pattern.colorAt(point(0, 0, 0)).shouldBe(WHITE)
         pattern.colorAt(point(0, 0.5, 0)).shouldBe(WHITE)
@@ -30,7 +27,7 @@ class StripePatternSpec : FunSpec ({
     }
 
     test("A stripe pattern is constant in z") {
-        val pattern = StripePattern(WHITE, BLACK)
+        val pattern = Stripe(WHITE, BLACK)
 
         pattern.colorAt(point(0, 0, 0)).shouldBe(WHITE)
         pattern.colorAt(point(0, 0, 0.5)).shouldBe(WHITE)
@@ -40,7 +37,7 @@ class StripePatternSpec : FunSpec ({
     }
 
     test("A stripe alternates in x") {
-        val pattern = StripePattern(WHITE, BLACK)
+        val pattern = Stripe(WHITE, BLACK)
 
         pattern.colorAt(point(0, 0, 0)).shouldBe(WHITE)
         pattern.colorAt(point(0.9, 0, 0)).shouldBe(WHITE)
@@ -51,7 +48,7 @@ class StripePatternSpec : FunSpec ({
     }
 
     test("Stripes with a pattern transformation") {
-        val pattern = StripePattern(WHITE, BLACK, transform = translation(0.5, 0, 0))
+        val pattern = Stripe(WHITE, BLACK, transform = translation(0.5, 0, 0))
 
         val c = pattern.colorAtObject(point(2.5, 0, 0))
 

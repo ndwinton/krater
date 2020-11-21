@@ -1,4 +1,4 @@
-package test.model
+package test.model.pattern
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -7,11 +7,11 @@ import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.point
-import krater.model.GradientPattern
+import krater.model.pattern.Gradient
 
-class GradientPatternSpec : FunSpec({
+class GradientSpec : FunSpec({
     test("A gradient linearly interpolates between colors") {
-        val pattern = GradientPattern(WHITE, BLACK, IDENTITY_4X4_MATRIX)
+        val pattern = Gradient(WHITE, BLACK, IDENTITY_4X4_MATRIX)
 
         pattern.colorAt(point(0, 0, 0)).shouldBe(WHITE)
         pattern.colorAt(point(0.25, 0, 0)).shouldBe(Color(0.75, 0.75, 0.75))

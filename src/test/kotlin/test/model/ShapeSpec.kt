@@ -7,6 +7,7 @@ import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
+import krater.model.pattern.Stripe
 import kotlin.math.PI
 import kotlin.math.sqrt
 
@@ -107,7 +108,7 @@ class ShapeSpec : FunSpec({
     test("Lighting with a pattern applied and shape transformed") {
         val s = TestShape(
             material = Material(
-                pattern = StripePattern(WHITE, BLACK),
+                pattern = Stripe(WHITE, BLACK),
                 ambient = 1.0,
                 diffuse = 0.0,
                 specular = 0.0,

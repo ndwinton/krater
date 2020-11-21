@@ -3,6 +3,7 @@ package krater
 import krater.canvas.Color
 import krater.geometry.*
 import krater.model.*
+import krater.model.pattern.Stripe
 import java.io.File
 import kotlin.math.PI
 
@@ -21,7 +22,7 @@ fun main(args: Array<String>) {
             color = Color(0.1, 1.0, 0.5),
             diffuse = 0.7,
             specular = 0.3,
-            pattern = StripePattern(
+            pattern = Stripe(
                 Color(1.0, 0.0, 0.0),
                 Color(1.0, 0.5, 0.5),
                 scaling(0.5, 0.5, 0.5).rotateZ(PI / 4)

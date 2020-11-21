@@ -1,4 +1,4 @@
-package test.model
+package test.model.pattern
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -7,7 +7,7 @@ import krater.geometry.Matrix
 import krater.geometry.Tuple
 import krater.geometry.point
 import krater.geometry.scaling
-import krater.model.Pattern
+import krater.model.pattern.Pattern
 
 class PatternSpec : FunSpec({
     class TestPatten(transform: Matrix) : Pattern(transform = transform) {

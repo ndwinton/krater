@@ -1,18 +1,16 @@
-package test.model
+package test.model.pattern
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
-import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.point
-import krater.model.GradientPattern
-import krater.model.RingPattern
+import krater.model.pattern.Ring
 
-class RingPatternSpec : FunSpec({
+class RingSpec : FunSpec({
     test("A ring should extend in both x and z") {
-        val pattern = RingPattern(WHITE, BLACK, IDENTITY_4X4_MATRIX)
+        val pattern = Ring(WHITE, BLACK, IDENTITY_4X4_MATRIX)
 
         pattern.colorAt(point(0, 0, 0)).shouldBe(WHITE)
         pattern.colorAt(point(1, 0, 0)).shouldBe(BLACK)

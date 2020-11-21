@@ -9,7 +9,7 @@ import krater.model.Material
 import krater.model.PointLight
 import krater.geometry.point
 import krater.geometry.vector
-import krater.model.StripePattern
+import krater.model.pattern.Stripe
 import kotlin.math.sqrt
 
 class MaterialSpec : FunSpec({
@@ -76,7 +76,7 @@ class MaterialSpec : FunSpec({
 
     test("Lighting with a pattern applied") {
         val m = Material(
-            pattern = StripePattern(WHITE, BLACK),
+            pattern = Stripe(WHITE, BLACK),
             ambient = 1.0,
             diffuse = 0.0,
             specular = 0.0,

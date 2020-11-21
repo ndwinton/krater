@@ -1,11 +1,11 @@
-package krater.model
+package krater.model.pattern
 
 import krater.canvas.Color
 import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.Matrix
 import krater.geometry.Tuple
 
-class SolidPattern(val color: Color, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
+class Solid(val color: Color, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
     override fun colorAt(point: Tuple): Color = color
     override fun colorAtObject(objectPoint: Tuple): Color = color
 
@@ -14,7 +14,7 @@ class SolidPattern(val color: Color, transform: Matrix = IDENTITY_4X4_MATRIX) : 
         if (javaClass != other?.javaClass) return false
         if (!super.equals(other)) return false
 
-        other as SolidPattern
+        other as Solid
 
         if (color != other.color) return false
 

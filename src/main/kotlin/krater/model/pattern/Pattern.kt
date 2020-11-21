@@ -1,4 +1,4 @@
-package krater.model
+package krater.model.pattern
 
 import krater.canvas.Color
 import krater.geometry.IDENTITY_4X4_MATRIX

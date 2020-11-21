@@ -1,4 +1,4 @@
-package krater.model
+package krater.model.pattern
 
 import krater.canvas.Color
 import krater.geometry.IDENTITY_4X4_MATRIX
@@ -7,7 +7,7 @@ import krater.geometry.Tuple
 import krater.geometry.near
 import kotlin.math.floor
 
-class StripePattern(val a: Color, val b: Color, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
+class Stripe(val a: Color, val b: Color, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
 
     override fun colorAt(point: Tuple): Color = if ((floor(point.x) % 2).near(0.0)) a else b
 
@@ -16,7 +16,7 @@ class StripePattern(val a: Color, val b: Color, transform: Matrix = IDENTITY_4X4
         if (javaClass != other?.javaClass) return false
         if (!super.equals(other)) return false
 
-        other as StripePattern
+        other as Stripe
 
         if (a != other.a) return false
         if (b != other.b) return false
