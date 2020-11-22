@@ -12,7 +12,7 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
     fun intersect(ray: Ray): List<Intersection> = objects.flatMap { it.intersect(ray) }.sortedBy { it.t }
     fun shadeHit(computation: PreparedComputation) =
         lights.fold(BLACK) { color, light ->
-            color + computation.intersection.shape.material.lighting(
+            color + computation.intersection.shape.lighting(
                 light,
                 computation.point,
                 computation.eyev,
