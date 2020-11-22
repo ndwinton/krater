@@ -1,9 +1,7 @@
 package krater.model
 
-import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.geometry.*
-import kotlin.math.pow
 
 abstract class Shape(
     val material: Material = Material(),
@@ -28,6 +26,6 @@ abstract class Shape(
     abstract fun localIntersect(objectRay: Ray): List<Intersection>
 
     fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean): Color {
-        return material.lighting(light, inverseTransform * position, eyev,normalv, inShadow)
+        return material.lighting(light, position, eyev,normalv, inShadow, inverseTransform * position)
     }
 }

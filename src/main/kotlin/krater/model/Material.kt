@@ -2,9 +2,7 @@ package krater.model
 
 import krater.canvas.BLACK
 import krater.canvas.Color
-import krater.geometry.Tuple
-import krater.geometry.near
-import krater.geometry.nearHash
+import krater.geometry.*
 import krater.model.pattern.Pattern
 import krater.model.pattern.Solid
 import kotlin.math.pow
@@ -43,10 +41,10 @@ class Material(
         return result
     }
 
-    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean): Color {
+    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, inShadow: Boolean, objectPoint: Tuple = position): Color {
         val lightv = (light.position - position).normalize()
         val reflectv = -(lightv.reflect(normalv))
-        val effectiveColor = pattern.colorAtObject(position) * light.intensity
+        val effectiveColor = pattern.colorAtObject(objectPoint) * light.intensity
         val effectiveAmbient = effectiveColor * ambient
 
         if (isLightBehindSurface(lightv, normalv) || inShadow) {
