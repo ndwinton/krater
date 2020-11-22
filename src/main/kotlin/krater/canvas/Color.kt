@@ -1,5 +1,6 @@
 package krater.canvas
 
+import krater.geometry.Tuple
 import krater.geometry.near
 import krater.geometry.nearHash
 import java.lang.Integer.max
@@ -9,7 +10,8 @@ import kotlin.math.roundToInt
 val BLACK = Color(0.0, 0.0, 0.0)
 val WHITE = Color(1.0, 1.0, 1.0)
 
-class Color(val red: Double, val green: Double, val blue: Double) {
+class Color(val red: Double, val green: Double, val blue: Double) : ColorProvider {
+    override fun colorAtObject(objectPoint: Tuple): Color = this
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

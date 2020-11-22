@@ -15,7 +15,10 @@ fun main(args: Array<String>) {
         material = Material(
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0,
-            pattern = RadialGradient(BLACK, WHITE, transform = translation(0, -EPSILON, 0)),
+            pattern = Checker(
+                Stripe(Color(1.0, 0.0, 0.0), Color(1.0, 0.5, 0.5), rotationY(PI/2).scale(0.25, 1, 0.25)),
+                Stripe(Color(0.0, 0.0, 1.0), Color(0.5, 0.5, 1.0), scaling(0.25, 1, 0.25)),
+                transform = translation(0, -EPSILON, 0)),
         ),
     )
 
