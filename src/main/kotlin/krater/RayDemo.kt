@@ -5,10 +5,7 @@ import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
-import krater.model.pattern.Checker
-import krater.model.pattern.Gradient
-import krater.model.pattern.Ring
-import krater.model.pattern.Stripe
+import krater.model.pattern.*
 import java.io.File
 import kotlin.math.PI
 
@@ -18,7 +15,7 @@ fun main(args: Array<String>) {
         material = Material(
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0,
-            pattern = Checker(BLACK, WHITE, transform = translation(0, -EPSILON, 0)),
+            pattern = RadialGradient(BLACK, WHITE, transform = translation(0, -EPSILON, 0)),
         ),
     )
 
