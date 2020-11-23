@@ -40,7 +40,7 @@ fun main(args: Array<String>) {
                 Color(1.0, 0.0, 0.0),
                 Color(1.0, 0.5, 0.5),
                 scaling(0.5, 0.5, 0.5).rotateZ(PI / 4)
-            )
+            ) + Checker(WHITE, BLACK, transform = scaling(0.5, 0.5, 0.5))
         )
     )
 
