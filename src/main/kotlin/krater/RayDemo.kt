@@ -6,6 +6,7 @@ import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
+import krater.model.pattern.noise.PerlinNoise
 import java.io.File
 import kotlin.math.PI
 
@@ -15,12 +16,13 @@ fun main(args: Array<String>) {
         material = Material(
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0,
-            pattern = Checker(
-                Stripe(Color(1.0, 0.0, 0.0), Color(1.0, 0.5, 0.5), rotationY(PI/2).scale(0.25, 1, 0.25)),
-                Stripe(Color(0.0, 0.0, 1.0), Color(0.5, 0.5, 1.0), scaling(0.25, 1, 0.25)),
-                transform = translation(0, -EPSILON, 0)),
+            pattern = PerlinNoise(
+                pattern = Stripe(Color(1.0, 0.0, 0.0), Color(1.0, 0.5, 0.5), rotationY(PI/2).scale(0.25, 1, 0.25)),
+                scale = 1.5,
+                octaves = 5,
+                persistence = 0.5
         ),
-    )
+    ))
 
     val sky = Plane(
         material = Material(
@@ -65,7 +67,7 @@ fun main(args: Array<String>) {
             color = Color(1.0, 0.8, 0.1),
             diffuse = 0.7,
             specular = 0.3,
-            pattern = Gradient(Color(1.0, 0.8, 0.1), Color(0.0, 0.0, 1.0))
+            pattern = PerlinNoise(Gradient(Color(1.0, 0.8, 0.1), Color(0.0, 0.0, 1.0)), scale = 0.8, octaves = 5, persistence = 0.9)
         )
     )
 
