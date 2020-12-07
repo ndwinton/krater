@@ -5,12 +5,14 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.doubles.shouldBeGreaterThan
 import io.kotest.matchers.doubles.shouldBeLessThan
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
+import kotlin.math.sqrt
 
 class WorldSpec : FunSpec ({
     val light1 = PointLight(point(-10, 10, -10), WHITE)
@@ -214,5 +216,94 @@ class WorldSpec : FunSpec ({
         val c = w.shadeHit(comps)
 
         c.shouldBe(Color(0.53425, 0.53425, 0.53425))
+    }
+
+    test("The reflected color for a non-reflective material") {
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5), material = Material(ambient = 1.0))
+            )
+        )
+
+        val r = Ray(point(0, 0, 0), vector(0, 0, 1))
+        val shape = w.objects[1]
+        val i = Intersection(1.0, shape)
+
+        val comps = PreparedComputation(i, r)
+        val color = w.reflectedColor(comps)
+
+        color.shouldBe(BLACK)
+    }
+
+    test("The reflected color for a reflective material") {
+        val shape = Plane(material = Material(reflective = 0.5), transform = translation(0, -1, 0))
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5), material = Material(ambient = 1.0)),
+                shape
+            )
+        )
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = PreparedComputation(i, r)
+        val color = w.reflectedColor(comps = comps)
+
+        color.shouldBe(Color(0.19033, 0.23792, 0.14275))
+    }
+
+    test("shadeHit with a reflective material") {
+        val shape = Plane(material = Material(reflective = 0.5), transform = translation(0, -1, 0))
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5), material = Material(ambient = 1.0)),
+                shape
+            )
+        )
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = PreparedComputation(i, r)
+        val color = w.shadeHit(comps)
+
+        color.shouldBe(Color(0.87676, 0.92434, 0.82917))
+    }
+
+    test("colorAt with mutually reflective surfaces") {
+        val w = World(
+            lights = listOf(PointLight(point(0, 0, 0), WHITE)),
+            objects = listOf(
+                Plane(material = Material(reflective = 1.0), transform = translation(0, -1, 0)),
+                Plane(material = Material(reflective = 1.0), transform = translation(0, 1, 0)),
+            )
+        )
+        val r = Ray(point(0, 0, 0), vector(0, 1, 0))
+
+        w.colorAt(ray = r).shouldNotBeNull()
+    }
+
+    test("The reflected color at maximum recursive depth") {
+        val shape = Plane(material = Material(reflective = 0.5), transform = translation(0, -1, 0))
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5), material = Material(ambient = 1.0)),
+                shape
+            )
+        )
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = PreparedComputation(i, r)
+        val color = w.reflectedColor(comps, 0)
+
+        color.shouldBe(BLACK)
     }
 })

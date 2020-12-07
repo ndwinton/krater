@@ -76,10 +76,11 @@ class MaterialSpec : FunSpec({
 
     test("Lighting with a pattern applied") {
         val m = Material(
-            pattern = Stripe(WHITE, BLACK),
             ambient = 1.0,
             diffuse = 0.0,
             specular = 0.0,
+            pattern = Stripe(WHITE, BLACK),
+            reflective = 0.0,
         )
         val eyev = vector(0, 0, -1)
         val normalv = vector(0, 0, -1)
@@ -90,5 +91,11 @@ class MaterialSpec : FunSpec({
 
         c1.shouldBe(WHITE)
         c2.shouldBe(BLACK)
+    }
+
+    test("Reflectivity for the default material") {
+        val m = Material()
+
+        m.reflective.shouldBe(0.0)
     }
 })

@@ -9,6 +9,7 @@ class PreparedComputation(val intersection: Intersection, ray: Ray) {
     val eyev: Tuple = -ray.direction
     val normalv: Tuple
     val inside: Boolean
+    val reflectv: Tuple
 
     init {
         val trueNormal = intersection.shape.normalAt(point)
@@ -20,5 +21,6 @@ class PreparedComputation(val intersection: Intersection, ray: Ray) {
             inside = false
         }
         overPoint = point + normalv * EPSILON
+        reflectv = ray.direction.reflect(normalv)
     }
 }

@@ -4,8 +4,6 @@ import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.canvas.ColorProvider
 import krater.geometry.*
-import krater.model.pattern.Pattern
-import krater.model.pattern.Solid
 import kotlin.math.pow
 
 class Material(
@@ -14,7 +12,8 @@ class Material(
     val diffuse: Double = 0.9,
     val shininess: Double = 200.0,
     val specular: Double = 0.9,
-    val pattern: ColorProvider = color
+    val pattern: ColorProvider = color,
+    val reflective: Double = 0.0
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

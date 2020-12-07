@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import krater.geometry.point
 import krater.geometry.vector
 import krater.model.*
+import kotlin.math.sqrt
 
 class IntersectionSpec : FunSpec({
 
@@ -99,5 +100,15 @@ class IntersectionSpec : FunSpec({
         comps.eyev.shouldBe(vector(0, 0, -1))
         comps.inside.shouldBeTrue()
         comps.normalv.shouldBe(vector(0, 0, -1))
+    }
+
+    test("Recomputing the reflection vector") {
+        val shape = Plane()
+        val r = Ray(point(0, 1, -1), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = PreparedComputation(i, r)
+
+        comps.reflectv.shouldBe(vector(0, sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
     }
 })

@@ -16,6 +16,7 @@ fun main(args: Array<String>) {
         material = Material(
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0,
+            reflective = 0.1,
             pattern = PerlinNoise(
                 pattern = Stripe(Color(1.0, 0.0, 0.0), Color(1.0, 0.5, 0.5), rotationY(PI/2).scale(0.25, 1, 0.25)),
                 scale = 1.5,
@@ -50,13 +51,15 @@ fun main(args: Array<String>) {
         transform = scaling(0.5, 0.5, 0.5)
             .translate(1.5, 0.5, 0.5),
         material = Material(
-            color = Color(0.5, 1.0, 0.1),
-            diffuse = 0.7,
-            specular = 0.3,
-            pattern = Checker(
-                Color(0.5, 1.0, 0.1),
-                Color(0.0, 0.5, 0.0), scaling(0.25, 0.25, 0.25).rotateY(PI / 4)
-            )
+            color = WHITE,
+            diffuse = 0.0,
+            specular = 0.0,
+            reflective = 1.0,
+
+//            pattern = Checker(
+//                Color(0.5, 1.0, 0.1),
+//                Color(0.0, 0.5, 0.0), scaling(0.25, 0.25, 0.25).rotateY(PI / 4)
+//            )
         )
     )
 
@@ -76,7 +79,7 @@ fun main(args: Array<String>) {
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, left, middle, right, sky)
+        objects = listOf(floor, left, middle, right, /*sky*/)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
