@@ -13,7 +13,9 @@ class Material(
     val shininess: Double = 200.0,
     val specular: Double = 0.9,
     val pattern: ColorProvider = color,
-    val reflective: Double = 0.0
+    val reflective: Double = 0.0,
+    val transparency: Double = 0.0,
+    val refractiveIndex: Double = 1.0,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

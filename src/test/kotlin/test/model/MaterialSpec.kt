@@ -98,4 +98,11 @@ class MaterialSpec : FunSpec({
 
         m.reflective.shouldBe(0.0)
     }
+
+    test("Transparency and refractive index for default material") {
+        val m = Material()
+
+        m.transparency.shouldBe(0.0)
+        m.refractiveIndex.shouldBe(0.0)
+    }
 })

@@ -1,11 +1,14 @@
 package test.model
 
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.forAll
+import io.kotest.data.headers
+import io.kotest.data.row
+import io.kotest.data.table
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
-import krater.geometry.point
-import krater.geometry.vector
+import krater.geometry.*
 import krater.model.*
 import kotlin.math.sqrt
 
@@ -110,5 +113,44 @@ class IntersectionSpec : FunSpec({
         val comps = PreparedComputation(i, r)
 
         comps.reflectv.shouldBe(vector(0, sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+    }
+
+    test("Finding n1 and n2 at various intersections") {
+        table(
+            headers("index", "n1", "n2"),
+            row(0, 1.0, 1.5),
+            row(1, 1.5, 2.0),
+            row(2, 2.0, 2.5),
+            row(3, 2.5, 2.5),
+            row(4, 2.5, 1.5),
+            row(5, 1.5, 1.0),
+        ).forAll { index, n1, n2 ->
+            val a = Sphere(
+                material = Material(transparency = 1.0, refractiveIndex = 1.5),
+                transform = scaling(2, 2, 2)
+            )
+            val b = Sphere(
+                material = Material(transparency = 1.0, refractiveIndex = 2.0),
+                transform = translation(0, 0, -0.25)
+            )
+            val c = Sphere(
+                material = Material(transparency = 1.0, refractiveIndex = 2.5),
+                transform = translation(0, 0, 0.25)
+            )
+            val r = Ray(point(0, 0, -4), vector(0, 0, 1))
+            val xs = listOf(
+                Intersection(2.0, a),
+                Intersection(2.75, b),
+                Intersection(3.25, c),
+                Intersection(4.75, b),
+                Intersection(5.25, c),
+                Intersection(6.0, a),
+            )
+
+            val comps = PreparedComputation(xs[index], r, xs)
+
+            comps.n1.shouldBe(n1)
+            comps.n2.shouldBe(n2)
+        }
     }
 })
