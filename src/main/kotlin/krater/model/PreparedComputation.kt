@@ -6,6 +6,7 @@ import krater.geometry.Tuple
 class PreparedComputation(val intersection: Intersection, ray: Ray, allIntersections: List<Intersection> = emptyList()) {
     val point: Tuple = ray.position(intersection.t)
     val overPoint: Tuple
+    val underPoint: Tuple
     val eyev: Tuple = -ray.direction
     val normalv: Tuple
     val inside: Boolean
@@ -23,6 +24,7 @@ class PreparedComputation(val intersection: Intersection, ray: Ray, allIntersect
             inside = false
         }
         overPoint = point + normalv * EPSILON
+        underPoint = point - normalv * EPSILON
         reflectv = ray.direction.reflect(normalv)
 
         val nValues = computeNValues(intersection, allIntersections)

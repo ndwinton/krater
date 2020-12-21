@@ -12,6 +12,7 @@ import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
+import krater.model.pattern.Pattern
 import kotlin.math.sqrt
 
 class WorldSpec : FunSpec ({
@@ -87,7 +88,10 @@ class WorldSpec : FunSpec ({
     }
 
     test("Shading an intersection from the inside, multiple lights") {
-        val w = World(defaultWorld, lights = listOf(PointLight(point(0, 0.25, 0), WHITE), PointLight(point(0, -0.25, 0), WHITE)))
+        val w = World(
+            defaultWorld,
+            lights = listOf(PointLight(point(0, 0.25, 0), WHITE), PointLight(point(0, -0.25, 0), WHITE))
+        )
         val r = Ray(point(0, 0, 0), vector(0, 0, 1))
         val shape = w.objects[1]
         val i = Intersection(0.5, shape)
@@ -305,5 +309,116 @@ class WorldSpec : FunSpec ({
         val color = w.reflectedColor(comps, 0)
 
         color.shouldBe(BLACK)
+    }
+
+    test("The refracted color with an opaque surface") {
+        val w = defaultWorld
+        val shape = w.objects.first()
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val xs = listOf(Intersection(4.0, shape), Intersection(6.0, shape))
+
+        val comps = PreparedComputation(xs[0], r, xs)
+        val c = w.refractedColor(comps, 5)
+
+        c.shouldBe(BLACK)
+    }
+
+    test("The refracted color at the maximum recursive depth") {
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(
+                    material = Material(
+                        color = Color(0.8, 1.0, 0.6),
+                        diffuse = 0.7, specular = 0.2, transparency = 1.0, refractiveIndex = 1.5
+                    )
+                ),
+                Sphere(transform = scaling(0.5, 0.5, 0.5))
+            )
+        )
+        val shape = w.objects.first()
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val xs = listOf(Intersection(4.0, shape), Intersection(6.0, shape))
+
+        val comps = PreparedComputation(xs[0], r, xs)
+        val c = w.refractedColor(comps, 0)
+
+        c.shouldBe(BLACK)
+    }
+
+    test("The refracted color under total internal reflection") {
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(
+                    material = Material(
+                        color = Color(0.8, 1.0, 0.6),
+                        diffuse = 0.7, specular = 0.2, transparency = 1.0, refractiveIndex = 1.5
+                    )
+                ),
+                Sphere(transform = scaling(0.5, 0.5, 0.5))
+            )
+        )
+        val shape = w.objects.first()
+        val r = Ray(point(0, 0, sqrt(2.0) / 2.0), vector(0, 1, 0))
+        val xs = listOf(Intersection(-sqrt(2.0) / 2.0, shape), Intersection(sqrt(2.0) / 2.0, shape))
+
+        // Starting inside the sphere so look at second intersection
+        val comps = PreparedComputation(xs[1], r, xs)
+        val c = w.refractedColor(comps, 5)
+
+        c.shouldBe(BLACK)
+    }
+
+    class TestPatten(transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform = transform) {
+        override fun colorAt(point: Tuple): Color = Color(point.x, point.y, point.z)
+    }
+
+    test("The refracted color with a refracted ray") {
+        val sphereA = Sphere(
+            material = Material(
+                color = Color(0.8, 1.0, 0.6),
+                diffuse = 0.7, specular = 0.2, ambient = 1.0, pattern = TestPatten()
+            )
+        )
+        val sphereB =
+            Sphere(transform = scaling(0.5, 0.5, 0.5), material = Material(transparency = 1.0, refractiveIndex = 1.5))
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(sphereA, sphereB)
+        )
+        val r = Ray(point(0, 0, 0.1), vector(0, 1, 0))
+        val xs = listOf(
+            Intersection(-0.9899, sphereA),
+            Intersection(-0.4899, sphereB),
+            Intersection(0.4899, sphereB),
+            Intersection(0.9899, sphereA)
+        )
+
+        val comps = PreparedComputation(xs[2], r, xs)
+        val c = w.refractedColor(comps, 5)
+
+        c.shouldBe(Color(0.0, 0.99888, 0.04722))
+    }
+
+    test("shadeHit with a transparent material") {
+        val floor = Plane(transform = translation(0, -1, 0), Material(transparency = 0.5, refractiveIndex = 1.5))
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5)),
+                floor,
+                Sphere(material = Material(color = Color(1.0, 0.0, 0.0), ambient = 0.5),
+                    transform = translation(0, -3.5, -0.5))
+            )
+        )
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val xs = listOf(Intersection(sqrt(2.0), floor))
+
+        val comps = PreparedComputation(xs[0], r, xs)
+        val color = w.shadeHit(comps, 5)
+
+        color.shouldBe(Color(0.93642, 0.68642, 0.68642))
     }
 })

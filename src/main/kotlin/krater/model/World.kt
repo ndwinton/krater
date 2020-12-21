@@ -3,6 +3,7 @@ package krater.model
 import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.geometry.Tuple
+import kotlin.math.sqrt
 
 const val MAX_RECURSION = 4
 
@@ -19,7 +20,7 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
                 computation.eyev,
                 computation.normalv,
                 isShadowed(light, computation.overPoint)
-            ) + reflectedColor(computation, remaining)
+            ) + reflectedColor(computation, remaining) + refractedColor(computation, remaining)
         }
 
     fun colorAt(ray: Ray, remaining: Int = MAX_RECURSION): Color {
@@ -42,5 +43,22 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
         val reflectRay = Ray(comps.overPoint, comps.reflectv)
         val color = colorAt(reflectRay, remaining - 1)
         return color * comps.intersection.shape.material.reflective
+    }
+
+    fun refractedColor(comps: PreparedComputation, remaining: Int = MAX_RECURSION): Color {
+        val nRatio = comps.n1 / comps.n2
+        val cosI = comps.eyev.dot(comps.normalv)
+        val sinTSquared = (nRatio * nRatio) * (1 - cosI * cosI)
+        return when {
+            remaining == 0 -> BLACK // Recursion too deep
+            comps.intersection.shape.material.transparency == 0.0 -> BLACK // Opaque
+            sinTSquared > 1.0 -> BLACK // Total internal reflection
+            else -> {
+                val cosT = sqrt(1.0 - sinTSquared)
+                val direction = comps.normalv * (nRatio * cosI - cosT) - comps.eyev * nRatio
+                val refractRay = Ray(comps.underPoint, direction)
+                colorAt(refractRay, remaining - 1) * comps.intersection.shape.material.transparency
+            }
+        }
     }
 }

@@ -7,6 +7,8 @@ import io.kotest.data.row
 import io.kotest.data.table
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.doubles.shouldBeGreaterThan
+import io.kotest.matchers.doubles.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
 import krater.model.*
@@ -152,5 +154,16 @@ class IntersectionSpec : FunSpec({
             comps.n1.shouldBe(n1)
             comps.n2.shouldBe(n2)
         }
+    }
+
+    test("The under point is offset below the surface") {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val shape = Sphere(material = Material(transparency = 1.0, refractiveIndex = 1.5), transform = translation(0, 0, 1))
+        val i = Intersection(5.0, shape)
+        val xs = listOf(i)
+        val comps = PreparedComputation(i, r, xs)
+
+        comps.underPoint.z.shouldBeGreaterThan(EPSILON / 2)
+        comps.point.z.shouldBeLessThan(comps.underPoint.z)
     }
 })
