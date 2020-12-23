@@ -2,6 +2,8 @@ package krater.model
 
 import krater.geometry.EPSILON
 import krater.geometry.Tuple
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class PreparedComputation(val intersection: Intersection, ray: Ray, allIntersections: List<Intersection> = emptyList()) {
     val point: Tuple = ray.position(intersection.t)
@@ -13,6 +15,19 @@ class PreparedComputation(val intersection: Intersection, ray: Ray, allIntersect
     val reflectv: Tuple
     val n1: Double
     val n2: Double
+    val schlickReflectance: Double get() {
+        var cos = eyev.dot(normalv)
+        if (n1 > n2) {
+            val n = n1 / n2
+            val sinTSquared = n * n * (1.0 - cos * cos)
+            if (sinTSquared > 1.0) return 1.0
+
+            val cosT = sqrt(1.0 - sinTSquared)
+            cos = cosT
+        }
+        val r0 = ((n1 - n2) / (n1 + n2)).pow(2)
+        return r0 + (1 - r0) * (1 - cos).pow(5)
+    }
 
     init {
         val trueNormal = intersection.shape.normalAt(point)

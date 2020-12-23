@@ -15,6 +15,8 @@ import krater.model.*
 import kotlin.math.sqrt
 
 class IntersectionSpec : FunSpec({
+    val root2by2 = sqrt(2.0) / 2.0
+    val glassSphere = Sphere(material = Material(transparency = 1.0, refractiveIndex = 1.5))
 
     test("An intersection encapsulates t and object") {
         val s = Sphere()
@@ -109,12 +111,12 @@ class IntersectionSpec : FunSpec({
 
     test("Recomputing the reflection vector") {
         val shape = Plane()
-        val r = Ray(point(0, 1, -1), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val r = Ray(point(0, 1, -1), vector(0, -root2by2, root2by2))
         val i = Intersection(sqrt(2.0), shape)
 
         val comps = PreparedComputation(i, r)
 
-        comps.reflectv.shouldBe(vector(0, sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        comps.reflectv.shouldBe(vector(0, root2by2, root2by2))
     }
 
     test("Finding n1 and n2 at various intersections") {
@@ -165,5 +167,35 @@ class IntersectionSpec : FunSpec({
 
         comps.underPoint.z.shouldBeGreaterThan(EPSILON / 2)
         comps.point.z.shouldBeLessThan(comps.underPoint.z)
+    }
+
+    test("The Schlick approximation under total internal reflection") {
+        val shape = glassSphere
+        val r = Ray(point(0, 0, root2by2), vector(0, 1, 0))
+        val xs = listOf(Intersection(-root2by2, shape), Intersection(root2by2, shape))
+
+        val comps = PreparedComputation(xs[1], r, xs)
+
+        comps.schlickReflectance.shouldBe(1.0)
+    }
+
+    test("The Schlick approximation with a perpendicular viewing angle") {
+        val shape = glassSphere
+        val r = Ray(point(0, 0, 0), vector(0, 1, 0))
+        val xs = listOf(Intersection(-1.0, shape), Intersection(1.0, shape))
+
+        val comps = PreparedComputation(xs[1], r, xs)
+
+        comps.schlickReflectance.near(0.04)shouldBe(true)
+    }
+
+    test("The Schlick approximation with small angle and n2 > n1") {
+        val shape = glassSphere
+        val r = Ray(point(0, 0.99, -2), vector(0, 0, 1))
+        val xs = listOf(Intersection(1.8589, shape))
+
+        val comps = PreparedComputation(xs[0], r, xs)
+
+        comps.schlickReflectance.near(0.48873).shouldBe(true)
     }
 })

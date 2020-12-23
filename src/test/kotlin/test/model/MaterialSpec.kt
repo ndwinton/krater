@@ -103,6 +103,6 @@ class MaterialSpec : FunSpec({
         val m = Material()
 
         m.transparency.shouldBe(0.0)
-        m.refractiveIndex.shouldBe(0.0)
+        m.refractiveIndex.shouldBe(1.0)
     }
 })

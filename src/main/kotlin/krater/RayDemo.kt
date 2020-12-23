@@ -17,6 +17,7 @@ fun main(args: Array<String>) {
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0,
             reflective = 0.1,
+            transparency = 0.0,
             pattern = PerlinNoise(
                 pattern = Stripe(Color(1.0, 0.0, 0.0), Color(1.0, 0.5, 0.5), rotationY(PI/2).scale(0.25, 1, 0.25)),
                 scale = 1.5,
@@ -51,10 +52,14 @@ fun main(args: Array<String>) {
         transform = scaling(0.5, 0.5, 0.5)
             .translate(1.5, 0.5, 0.5),
         material = Material(
-            color = WHITE,
+            color = BLACK,
             diffuse = 0.0,
-            specular = 0.0,
-            reflective = 1.0,
+            ambient = 0.0,
+            specular = 1.0,
+            shininess = 300.0,
+            reflective = 0.5,
+            transparency = 0.9,
+            refractiveIndex = 1.5,
 
 //            pattern = Checker(
 //                Color(0.5, 1.0, 0.1),

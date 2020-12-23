@@ -5,13 +5,14 @@ import krater.canvas.Color
 import krater.geometry.Tuple
 import kotlin.math.sqrt
 
-const val MAX_RECURSION = 4
+const val MAX_RECURSION = 5
 
 class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = listOf(DARKNESS)) {
 
     constructor(baseWorld: World, objects: List<Shape> = baseWorld.objects, lights: List<Light> = baseWorld.lights) : this(objects, lights)
 
     fun intersect(ray: Ray): List<Intersection> = objects.flatMap { it.intersect(ray) }.sortedBy { it.t }
+
     fun shadeHit(computation: PreparedComputation, remaining: Int = MAX_RECURSION) =
         lights.fold(BLACK) { color, light ->
             color + computation.intersection.shape.lighting(
@@ -20,12 +21,25 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
                 computation.eyev,
                 computation.normalv,
                 isShadowed(light, computation.overPoint)
-            ) + reflectedColor(computation, remaining) + refractedColor(computation, remaining)
+            )
+        } + reflectedPlusRefracted(computation, remaining)
+
+    private fun reflectedPlusRefracted(computation: PreparedComputation, remaining: Int = MAX_RECURSION): Color {
+        val reflected = reflectedColor(computation, remaining)
+        val refracted = refractedColor(computation, remaining)
+        val material = computation.intersection.shape.material
+        return if (material.reflective > 0.0 && material.transparency > 0.0) {
+            val reflectance = computation.schlickReflectance
+            reflected * reflectance + refracted * (1.0 - reflectance)
+        } else {
+            reflected + refracted
         }
+    }
 
     fun colorAt(ray: Ray, remaining: Int = MAX_RECURSION): Color {
-        val hit = intersect(ray).hit()
-        return if (hit == NO_INTERSECTION) BLACK else shadeHit(PreparedComputation(hit, ray), remaining)
+        val allIntersections = intersect(ray)
+        val hit = allIntersections.hit()
+        return if (hit == NO_INTERSECTION) BLACK else shadeHit(PreparedComputation(hit, ray, allIntersections), remaining)
     }
 
     fun isShadowed(light: Light, point: Tuple): Boolean {

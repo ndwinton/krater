@@ -421,4 +421,26 @@ class WorldSpec : FunSpec ({
 
         color.shouldBe(Color(0.93642, 0.68642, 0.68642))
     }
+
+    test("shadeHit with reflective, transparent material") {
+        val floor = Plane(transform = translation(0, -1, 0),
+            material = Material(transparency = 0.5, refractiveIndex = 1.5, reflective = 0.5))
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+                Sphere(transform = scaling(0.5, 0.5, 0.5)),
+                floor,
+                Sphere(material = Material(color = Color(1.0, 0.0, 0.0), ambient = 0.5),
+                    transform = translation(0, -3.5, -0.5))
+            )
+        )
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0) / 2.0, sqrt(2.0) / 2.0))
+        val xs = listOf(Intersection(sqrt(2.0), floor))
+
+        val comps = PreparedComputation(xs[0], r, xs)
+        val color = w.shadeHit(comps, 5)
+
+        color.shouldBe(Color(0.93391, 0.69643, 0.69243))
+    }
 })
