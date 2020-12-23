@@ -182,6 +182,17 @@ class WorldSpec : FunSpec ({
         defaultWorld.isShadowed(light1, point(-2, 2, -2)).shouldBe(false)
     }
 
+    test("The shadow when an object material shadow property is false") {
+        val w = World(
+            lights = listOf(light1),
+            objects = listOf(
+                Sphere(material = Material(color = Color(0.8, 1.0, 0.6),
+                    diffuse = 0.7, specular = 0.2, shadow = false)),
+            )
+        )
+        w.isShadowed(light1, point(10, -10, 10)).shouldBe(false)
+    }
+
     test("shadeHit is given an intersection in shadow") {
         val s1 = Sphere()
         val s2 = Sphere(transform = translation(0, 0, 10))

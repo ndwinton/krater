@@ -47,7 +47,7 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
         val distance = vector.magnitude()
         val direction = vector.normalize()
         val ray = Ray(point, direction)
-        val intersections = intersect(ray)
+        val intersections = intersect(ray).filter { it.shape.material.shadow }
         val hit = intersections.hit()
         return hit != NO_INTERSECTION && hit.t < distance
     }

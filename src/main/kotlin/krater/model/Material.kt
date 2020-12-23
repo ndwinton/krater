@@ -16,7 +16,9 @@ class Material(
     val reflective: Double = 0.0,
     val transparency: Double = 0.0,
     val refractiveIndex: Double = 1.0,
+    val shadow: Boolean = true,
 ) {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
