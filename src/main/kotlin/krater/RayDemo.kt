@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
 
     val right = Sphere(
         transform = scaling(0.5, 0.5, 0.5)
-            .translate(1.5, 0.5, 0.5),
+            .translate(1.5, 1.5, 0.5),
         material = Material(
             color = BLACK,
             diffuse = 0.0,
@@ -79,12 +79,25 @@ fun main(args: Array<String>) {
         )
     )
 
+    val box = Cube(
+        transform = rotationY(PI / 4).scale(0.5, 0.5, 0.5).translate(1.5, 0.5, 0.5),
+        material = Material(
+            reflective = 0.3,
+            pattern = PerlinNoise(
+                Gradient(Color(0.9, 0.9, 0.7), Color(0.5, 0.5, 0.5),
+                    transform = scaling(0.25, 1, 1).rotateX(PI / 5).rotateY(PI / 3).rotateZ(PI  / 4)),
+                scale = 0.5,
+                octaves = 5,
+                persistence = 0.9
+            )
+        )
+    )
     val world = World(
         lights = listOf(
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, left, middle, right, sky)
+        objects = listOf(floor, left, middle, right, sky, box)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
