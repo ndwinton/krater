@@ -34,12 +34,13 @@ fun main(args: Array<String>) {
     )
 
     val middle = Sphere(
-        transform = translation(-0.5, 0.75, 0.5),
+        transform = translation(-0.5, 0.0, 0.5),
         material = Material(
             color = Color(0.1, 1.0, 0.5),
             diffuse = 0.7,
             specular = 0.3,
             ambient = 0.2,
+            reflective = 0.05,
             pattern = Stripe(
                 Color(1.0, 0.0, 0.0),
                 Color(1.0, 0.5, 0.5),
@@ -92,12 +93,20 @@ fun main(args: Array<String>) {
             )
         )
     )
+
+    val pipe = Cylinder(
+        minimum = -1.0,
+        maximum = 1.0,
+        material = Material(reflective = 0.9, ambient = 0.0, diffuse = 0.0),
+        transform = rotationX(PI / 2).rotateY(PI / 4).translate(-3, 1, 4)
+    )
+
     val world = World(
         lights = listOf(
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, left, middle, right, sky, box)
+        objects = listOf(floor, left, middle, right, sky, box, pipe)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
