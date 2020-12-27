@@ -98,7 +98,15 @@ fun main(args: Array<String>) {
         minimum = -1.0,
         maximum = 1.0,
         material = Material(reflective = 0.9, ambient = 0.0, diffuse = 0.0),
-        transform = rotationX(PI / 2).rotateY(PI / 4).translate(-3, 1, 4)
+        transform = scaling(0.5, 1, 0.5).rotateX(PI / 2).rotateY(PI / 4).translate(-3, 0.5, 4)
+    )
+
+    val cylinder = Cylinder(
+        minimum = -1.0,
+        maximum = 1.0,
+        closed = true,
+        material = Material(reflective = 0.9, ambient = 0.0, diffuse = 0.0),
+        transform = scaling(0.5, 1, 0.5).rotateX(PI / 2).rotateY(-PI / 4).translate(-3, 1, 4)
     )
 
     val world = World(
@@ -106,7 +114,7 @@ fun main(args: Array<String>) {
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, left, middle, right, sky, box, pipe)
+        objects = listOf(floor, left, middle, right, sky, box, pipe, cylinder)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))

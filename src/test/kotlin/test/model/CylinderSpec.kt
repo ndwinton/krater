@@ -85,4 +85,40 @@ class CylinderSpec : FunSpec({
             xs.size.shouldBe(count)
         }
     }
+
+    test("The default closed value for a cylinder") {
+        Cylinder().closed.shouldBe(false)
+    }
+
+    test("Intersecting the caps of a closed cylinder") {
+        val cyl = Cylinder(minimum = 1.0, maximum = 2.0, closed = true)
+        table(
+            headers("point", "direction", "count"),
+            row(point(0, 3, 0), vector(0, -1, 0), 2),
+            row(point(0, 3, -2), vector(0, -1, 2), 2),
+            row(point(0, 4, -2), vector(0, -1, 1), 2), // corner case
+            row(point(0, 0, -2), vector(0, 1, 2), 2),
+            row(point(0, -1, -2), vector(0, 1, 1), 2), // corner case
+        ).forAll { point, direction, count ->
+            val r = Ray(point, direction.normalize())
+            val xs = cyl.localIntersect(r)
+
+            xs.size.shouldBe(count)
+        }
+    }
+
+    test("The normal vector on a cylinder's end caps") {
+        val cyl = Cylinder(minimum = 1.0, maximum = 2.0, closed = true)
+        table(
+            headers("point", "normal"),
+            row(point(0, 1, 0), vector(0, -1, 0)),
+            row(point(0.5, 1, 0), vector(0, -1, 0)),
+            row(point(0, 1, 0.5), vector(0, -1, 0)),
+            row(point(0, 2, 0), vector(0, 1, 0)),
+            row(point(0.5, 2, 0), vector(0, 1, 0)),
+            row(point(0, 2, 0.5), vector(0, 1, 0)),
+        ).forAll { point, normal ->
+            cyl.localNormalAt(point).shouldBe(normal)
+        }
+    }
 })
