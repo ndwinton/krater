@@ -2,6 +2,7 @@ package krater
 
 import krater.canvas.BLACK
 import krater.canvas.Color
+import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
@@ -106,7 +107,15 @@ fun main(args: Array<String>) {
         maximum = 1.0,
         closed = true,
         material = Material(reflective = 0.9, ambient = 0.0, diffuse = 0.0),
-        transform = scaling(0.5, 1, 0.5).rotateX(PI / 2).rotateY(-PI / 4).translate(-3, 1, 4)
+        transform = scaling(0.5, 1, 0.5).rotateX(PI / 2).rotateY(-PI / 4).translate(-3, 1.5, 4)
+    )
+
+    val cone = Cone(
+        minimum = -1.0,
+        maximum = -.0,
+        closed = true,
+        transform = translation(1, 1, 5).scale(1, 3, 1),
+        material = Material(pattern = Checker(BLACK, WHITE, transform = scaling(0.2, 0.2, 0.2)))
     )
 
     val world = World(
@@ -114,7 +123,7 @@ fun main(args: Array<String>) {
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, left, middle, right, sky, box, pipe, cylinder)
+        objects = listOf(floor, left, middle, right, sky, box, pipe, cylinder, cone)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
