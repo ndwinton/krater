@@ -2,7 +2,6 @@ package krater
 
 import krater.canvas.BLACK
 import krater.canvas.Color
-import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
@@ -12,6 +11,9 @@ import kotlin.math.PI
 
 fun main(args: Array<String>) {
     val size = if (args.isNotEmpty()) args[0].toInt() else 250
+
+    val start = System.currentTimeMillis()
+
     val floor = Plane(
         material = Material(
             color = Color(1.0, 0.9, 0.9),
@@ -115,7 +117,7 @@ fun main(args: Array<String>) {
         maximum = -.0,
         closed = true,
         transform = translation(1, 1, 5).scale(1, 3, 1),
-        material = Material(pattern = Checker(BLACK, WHITE, transform = scaling(0.2, 0.2, 0.2)))
+        material = Material(transparency = 0.9, refractiveIndex = 1.5, reflective = 0.9, ambient = 0.0, diffuse = 0.0)
     )
 
     val world = World(
@@ -131,4 +133,7 @@ fun main(args: Array<String>) {
     val canvas = camera.render(world)
 
     File("ray.ppm").writeText(canvas.toPPM())
+
+    val stop = System.currentTimeMillis()
+    println("Completed in %.4g seconds".format((stop - start) / 1000.0))
 }
