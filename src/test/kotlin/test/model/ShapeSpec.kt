@@ -1,6 +1,8 @@
 package test.model
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
 import krater.canvas.Color
@@ -126,6 +128,51 @@ class ShapeSpec : FunSpec({
         c1.shouldBe(WHITE)
         c2.shouldBe(BLACK)
     }
+
+    test("A shape has a parent attribute") {
+        val s = TestShape()
+
+        s.parent.shouldBeNull()
+    }
+
+    test("Shape parent should only be settable once") {
+        val s = TestShape()
+        s.parent = s
+        s.parent.shouldBe(s)
+
+        shouldThrow<IllegalAccessException> {
+            s.also { s.parent = it }
+        }
+    }
+
+    test("Converting a point from world to object space") {
+        val s = Sphere(transform = translation(5, 0, 0))
+        val g2 = Group(transform = scaling(2, 2, 2), shapes = listOf(s))
+        val g1 = Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
+        val p = s.worldToObject(point(-2, 0, -10))
+
+        p.shouldBe(point(0, 0, -1))
+    }
+
+    test("Converting a normal from object to world space") {
+        val s = Sphere(transform = translation(5, 0, 0))
+        val g2 = Group(transform = scaling(1, 2, 3), shapes = listOf(s))
+        val g1 = Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
+
+        val n = s.normalToWorld(vector(sqrt(3.0) / 3, sqrt(3.0) / 3, sqrt(3.0) / 3))
+
+        n.shouldBe(vector(0.28571, 0.42857, -0.85714))
+    }
+
+    test("Finding the normal on a child object") {
+        val s = Sphere(transform = translation(5, 0, 0))
+        val g2 = Group(transform = scaling(1, 2, 3), shapes = listOf(s))
+        val g1 = Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
+
+        val n = s.normalAt(point(1.7321, 1.1547, -5.5774))
+
+        n.shouldBe(vector(0.28570, 0.42854, -0.85716))
+    }
 })
 
 class TestShape(transform: Matrix = IDENTITY_4X4_MATRIX, material: Material = Material()) : Shape(transform = transform, material = material) {
@@ -141,5 +188,4 @@ class TestShape(transform: Matrix = IDENTITY_4X4_MATRIX, material: Material = Ma
         savedRay = objectRay
         return emptyList()
     }
-
 }

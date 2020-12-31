@@ -83,6 +83,8 @@ fun main(args: Array<String>) {
         )
     )
 
+    val midGroup = Group(shapes = listOf(middle, left), transform = rotationZ(-PI / 4))
+
     val box = Cube(
         transform = rotationY(PI / 4).scale(0.5, 0.5, 0.5).translate(1.5, 0.5, 0.5),
         material = Material(
@@ -125,7 +127,7 @@ fun main(args: Array<String>) {
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, left, middle, right, sky, box, pipe, cylinder, cone)
+        objects = listOf(floor, midGroup, right, sky, box, pipe, cylinder, cone)
     )
 
     val camera = Camera(size * 2, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
