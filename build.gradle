@@ -1,7 +1,7 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
 }
 
 group 'krater'
@@ -17,6 +17,8 @@ dependencies {
     testImplementation 'io.kotest:kotest-runner-junit5:4.2.6' // for kotest framework
     testImplementation 'io.kotest:kotest-assertions-core:4.2.6' // for kotest core jvm assertions
     testImplementation 'io.kotest:kotest-property:4.2.6' // for kotest property test
+
+    testImplementation "io.mockk:mockk:1.10.4"
 }
 
 compileTestKotlin {
