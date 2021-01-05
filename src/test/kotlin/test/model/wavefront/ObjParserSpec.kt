@@ -3,8 +3,10 @@ package test.model.wavefront
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import krater.canvas.BLACK
 import krater.geometry.point
 import krater.geometry.scaling
+import krater.model.Material
 import krater.model.Triangle
 
 import krater.model.wavefront.ObjParser
@@ -129,5 +131,18 @@ class ObjParserSpec : FunSpec({
         g.shapes.shouldContain(parser.namedGroups["FirstGroup"])
         g.shapes.shouldContain(parser.namedGroups["SecondGroup"])
         g.transform.shouldBe(scaling(2, 2, 2))
+    }
+
+    test("Specifying default material") {
+        val material = Material(color = BLACK)
+        val parser = ObjParser.fromLines(triangles, material)
+
+        val g1 = parser.namedGroups["FirstGroup"]!!
+        val g2 = parser.namedGroups["SecondGroup"]!!
+        val t1 = g1.shapes[0] as Triangle
+        val t2 = g2.shapes[0] as Triangle
+
+        t1.material.shouldBe(material)
+        t2.material.shouldBe(material)
     }
 })
