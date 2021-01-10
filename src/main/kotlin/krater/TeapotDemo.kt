@@ -37,7 +37,10 @@ fun main(args: Array<String>) {
         transform = scaling(10000, 1, 1).translate(0, 5000, 0).rotateY(PI / 2).rotateX(PI / 4)
     )
 
-    val teapot = ObjParser.fromFile(File("src/main/resources/teapot.obj"), Material(color = Color(1.0, 1.0, 0.0))).toGroup(scaling(0.5, 0.5, 0.5))
+    val teapot = ObjParser.fromFile(
+        File("src/main/resources/teapot.obj"),
+        Material(color = Color(1.0, 1.0, 0.0))
+    ).toGroup(scaling(0.1, 0.1, 0.1).rotateX(-PI / 2))
 
     val world = World(
         lights = listOf(

@@ -6,7 +6,9 @@ import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
 import krater.geometry.point
 import krater.geometry.scaling
+import krater.geometry.vector
 import krater.model.Material
+import krater.model.SmoothTriangle
 import krater.model.Triangle
 
 import krater.model.wavefront.ObjParser
@@ -144,5 +146,56 @@ class ObjParserSpec : FunSpec({
 
         t1.material.shouldBe(material)
         t2.material.shouldBe(material)
+    }
+
+    test("Vertex normal records") {
+        val lines = """
+            vn 0 0 1
+            vn 0.707 0 -0.707
+            vn 1 2 3
+        """.trimIndent().split("\n")
+
+        val parser = ObjParser.fromLines(lines)
+
+        parser.normals.shouldBe(listOf(
+            vector(0, 0, 1),
+            vector(0.707, 0, -0.707),
+            vector(1, 2, 3),
+        ))
+    }
+
+    test("Faces with normals") {
+        val lines = """
+            v 0 1 0
+            v -1 0 0
+            v 1 0 0
+            
+            vn -1 0 0
+            vn 1 0 0
+            vn 0 1 0
+            
+            f 1//3 2//1 3//2
+            f 1/0/3 2/102/1 3/14/2
+        """.trimIndent().split("\n")
+
+        val parser = ObjParser.fromLines(lines)
+
+        val g = parser.defaultGroup
+
+        val t1 = g.shapes[0] as SmoothTriangle
+        val t2 = g.shapes[1] as SmoothTriangle
+
+        t1.p1.shouldBe(parser.vertices[0])
+        t1.p2.shouldBe(parser.vertices[1])
+        t1.p3.shouldBe(parser.vertices[2])
+        t1.n1.shouldBe(parser.normals[2])
+        t1.n2.shouldBe(parser.normals[0])
+        t1.n3.shouldBe(parser.normals[1])
+        t2.p1.shouldBe(t1.p1)
+        t2.p2.shouldBe(t1.p2)
+        t2.p3.shouldBe(t1.p3)
+        t2.n1.shouldBe(t1.n1)
+        t2.n2.shouldBe(t1.n2)
+        t2.n3.shouldBe(t1.n3)
     }
 })
