@@ -10,6 +10,7 @@ import krater.geometry.near
 import krater.geometry.point
 import krater.geometry.vector
 import krater.model.Cone
+import krater.model.NO_INTERSECTION
 import krater.model.Ray
 import kotlin.math.sqrt
 

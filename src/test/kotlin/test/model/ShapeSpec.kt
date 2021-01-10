@@ -179,7 +179,7 @@ class TestShape(transform: Matrix = IDENTITY_4X4_MATRIX, material: Material = Ma
     var savedPoint: Tuple? = null
     var savedRay: Ray? = null
 
-    override fun localNormalAt(objectPoint: Tuple): Tuple {
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple {
         savedPoint = objectPoint
         return vector(objectPoint.x, objectPoint.y, objectPoint.z)
     }

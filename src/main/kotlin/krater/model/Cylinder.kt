@@ -9,7 +9,7 @@ class Cylinder(material: Material = Material(),
                val maximum: Double = Double.POSITIVE_INFINITY,
                val closed: Boolean = false,
 ) : Shape(material, transform) {
-    override fun localNormalAt(objectPoint: Tuple): Tuple {
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple {
         val dist = objectPoint.x * objectPoint.x + objectPoint.z * objectPoint.z
         return when {
             dist < 1.0 && objectPoint.y >= maximum - EPSILON -> vector(0, 1, 0)

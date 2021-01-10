@@ -198,4 +198,12 @@ class IntersectionSpec : FunSpec({
 
         comps.schlickReflectance.near(0.48873).shouldBe(true)
     }
+
+    test("An intersection can encapsulate u and v") {
+        val s = Triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
+        val i = Intersection(3.5, s, u = 0.2, v = 0.4)
+
+        i.u.shouldBe(0.2)
+        i.v.shouldBe(0.4)
+    }
 })

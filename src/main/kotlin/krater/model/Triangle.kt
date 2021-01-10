@@ -3,21 +3,15 @@ package krater.model
 import krater.geometry.*
 import kotlin.math.abs
 
-class Triangle(val p1: Tuple, val p2: Tuple, val p3: Tuple,
-               material: Material = Material(),
-               transform: Matrix = IDENTITY_4X4_MATRIX
+open class Triangle(val p1: Tuple, val p2: Tuple, val p3: Tuple,
+                    material: Material = Material(),
+                    transform: Matrix = IDENTITY_4X4_MATRIX
 ) : Shape(material, transform) {
-    val e1: Tuple
-    val e2: Tuple
-    val normal: Tuple
+    val e1: Tuple = p2 - p1
+    val e2: Tuple = p3 - p1
+    val normal: Tuple = e2.cross(e1).normalize()
 
-    init {
-        e1 = p2 - p1
-        e2 = p3 - p1
-        normal = e2.cross(e1).normalize()
-    }
-
-    override fun localNormalAt(objectPoint: Tuple): Tuple = normal
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple = normal
 
     override fun localIntersect(objectRay: Ray): List<Intersection> {
         val dirCrossE2 = objectRay.direction.cross(e2)
@@ -34,6 +28,6 @@ class Triangle(val p1: Tuple, val p2: Tuple, val p3: Tuple,
         if (v < 0.0 || (u + v) > 1.0) return emptyList()
 
         val t = f * e2.dot(originCrossE1)
-        return listOf(Intersection(t, this))
+        return listOf(Intersection(t, this, u = u, v = v))
     }
 }

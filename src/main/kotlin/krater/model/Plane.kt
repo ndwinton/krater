@@ -7,7 +7,7 @@ class Plane(
     material: Material = Material()
 ) : Shape(transform = transform, material = material) {
 
-    override fun localNormalAt(objectPoint: Tuple): Tuple = vector(0, 1, 0)
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple = vector(0, 1, 0)
 
     override fun localIntersect(objectRay: Ray): List<Intersection> =
         if (objectRay.direction.y.near(0.0)) emptyList()

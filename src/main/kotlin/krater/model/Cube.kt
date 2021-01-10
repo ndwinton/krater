@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 class Cube(transform: Matrix = IDENTITY_4X4_MATRIX,
            material: Material = Material()) : Shape(transform = transform, material = material) {
-    override fun localNormalAt(objectPoint: Tuple): Tuple =
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple =
         when (maxOf(objectPoint.x.absoluteValue, objectPoint.y.absoluteValue, objectPoint.z.absoluteValue)) {
             objectPoint.x.absoluteValue -> vector(objectPoint.x, 0, 0)
             objectPoint.y.absoluteValue -> vector(0, objectPoint.y, 0)

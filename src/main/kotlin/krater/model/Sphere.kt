@@ -8,10 +8,10 @@ class Sphere(
     material: Material = Material()
 ) : Shape(transform = transform, material = material) {
 
-    override fun localIntersect(objectSpaceRay: Ray): List<Intersection> {
-        val sphereToRay = objectSpaceRay.origin - point(0, 0, 0)
-        val a = objectSpaceRay.direction.dot(objectSpaceRay.direction)
-        val b = 2 * objectSpaceRay.direction.dot(sphereToRay)
+    override fun localIntersect(objectRay: Ray): List<Intersection> {
+        val sphereToRay = objectRay.origin - point(0, 0, 0)
+        val a = objectRay.direction.dot(objectRay.direction)
+        val b = 2 * objectRay.direction.dot(sphereToRay)
         val c = sphereToRay.dot(sphereToRay) - 1
         val discriminant = b * b - 4 * a * c
 
@@ -25,7 +25,7 @@ class Sphere(
         }
     }
 
-    override fun localNormalAt(objectPoint: Tuple): Tuple = objectPoint - point(0, 0, 0)
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple = objectPoint - point(0, 0, 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

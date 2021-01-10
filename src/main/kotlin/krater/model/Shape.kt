@@ -30,12 +30,13 @@ abstract class Shape(
     }
     private fun calculateGroupTransposedInverse(): Matrix = (parent?.calculateGroupTransposedInverse() ?: IDENTITY_4X4_MATRIX) * transposedInverse
 
-    fun normalAt(point: Tuple): Tuple {
+    fun normalAt(point: Tuple, intersection: Intersection = NO_INTERSECTION): Tuple {
         val objectPoint = worldToObject(point)
-        val objectNormal = localNormalAt(objectPoint)
+        val objectNormal = localNormalAt(objectPoint, intersection)
         return normalToWorld(objectNormal)
     }
-    abstract fun localNormalAt(objectPoint: Tuple): Tuple
+
+    abstract fun localNormalAt(objectPoint: Tuple, intersection: Intersection = NO_INTERSECTION): Tuple
 
     fun intersect(ray: Ray): List<Intersection> {
         val objectSpaceRay = ray.transform(inverseTransform)

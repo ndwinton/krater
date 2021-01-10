@@ -30,7 +30,7 @@ class PreparedComputation(val intersection: Intersection, ray: Ray, allIntersect
     }
 
     init {
-        val trueNormal = intersection.shape.normalAt(point)
+        val trueNormal = intersection.shape.normalAt(point, intersection)
         if (trueNormal.dot(eyev) < 0) {
             normalv = -trueNormal
             inside = true

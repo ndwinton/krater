@@ -10,7 +10,7 @@ class Group(transform: Matrix = IDENTITY_4X4_MATRIX, val shapes: List<Shape> = e
         shapes.forEach { it.parent = this }
     }
 
-    override fun localNormalAt(objectPoint: Tuple): Tuple {
+    override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple {
         throw NotImplementedError("Should never be called directly")
     }
 
