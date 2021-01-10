@@ -39,7 +39,14 @@ class ObjParser(
                 .filter { !it.isBlank() && !it.startsWith("#") }
                 .map { it.split("""\s+""".toRegex()) }
 
-        fun fromFile(file: File, material: Material = Material()) = fromLines(file.readLines(), material)
+        fun fromFile(file: File, material: Material = Material()): ObjParser {
+            val parser = fromLines(file.readLines(), material)
+            println("File: $file")
+            println("x-axis bounds: ${parser.vertices.minOf { it.x }} -> ${parser.vertices.maxOf { it.x }}")
+            println("y-axis bounds: ${parser.vertices.minOf { it.y }} -> ${parser.vertices.maxOf { it.y }}")
+            println("z-axis bounds: ${parser.vertices.minOf { it.z }} -> ${parser.vertices.maxOf { it.z }}")
+            return parser
+        }
 
         private fun parseVertices(lines: List<List<String>>): List<Tuple> =
             lines.filter { it[0] == "v" }
