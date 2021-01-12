@@ -39,18 +39,17 @@ fun main(args: Array<String>) {
 
     val teapot = ObjParser.fromFile(
         File("src/main/resources/teapot.obj"),
-        Material(color = Color(1.0, 1.0, 0.0))
+        Material(color = Color(1.0, 1.0, 0.0), ambient = 0.1)
     ).toGroup(scaling(0.1, 0.1, 0.1).rotateX(-PI / 2))
 
     val world = World(
         lights = listOf(
-            PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
-            PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
+            PointLight(point(-5, 10, -10), Color(0.9, 0.9, 0.9)),
         ),
         objects = listOf(floor, sky, teapot)
     )
 
-    val camera = Camera(size, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))
+    val camera = Camera(size, size, PI / 3, viewTransform(point(0, 3, -5), point(0, 1, 0), vector(0, 1, 0)))
 
     val canvas = camera.render(world)
 
