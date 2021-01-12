@@ -6,6 +6,7 @@ import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
+import krater.model.shapes.Sphere
 import kotlin.math.PI
 import kotlin.math.sqrt
 
@@ -64,10 +65,9 @@ class CameraSpec : FunSpec({
     }
 
     test("Rendering a world with a camera") {
-        val light1 = PointLight(point(-10, 10, -10), WHITE)
-        val light2 = PointLight(point(10, 10, -10), WHITE)
+        val light = PointLight(point(-10, 10, -10), WHITE)
         val defaultWorld = World(
-            lights = listOf(light1),
+            lights = listOf(light),
             objects = listOf(
                 Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
                 Sphere(transform = scaling(0.5, 0.5, 0.5))

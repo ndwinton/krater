@@ -1,7 +1,8 @@
-package krater.model
+package krater.model.shapes
 
 import krater.canvas.Color
 import krater.geometry.*
+import krater.model.*
 
 
 abstract class Shape(

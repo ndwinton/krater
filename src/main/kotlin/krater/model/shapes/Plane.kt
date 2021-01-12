@@ -1,6 +1,9 @@
-package krater.model
+package krater.model.shapes
 
 import krater.geometry.*
+import krater.model.Intersection
+import krater.model.Material
+import krater.model.Ray
 
 class Plane(
     transform: Matrix = IDENTITY_4X4_MATRIX,

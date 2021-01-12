@@ -2,6 +2,7 @@ package krater.model
 
 import krater.geometry.EPSILON
 import krater.geometry.Tuple
+import krater.model.shapes.Shape
 import kotlin.math.pow
 import kotlin.math.sqrt
 

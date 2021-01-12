@@ -1,7 +1,8 @@
-package krater.model
+package krater.model.shapes
 
 import krater.geometry.*
-import kotlin.math.abs
+import krater.model.Intersection
+import krater.model.Material
 
 class SmoothTriangle(p1: Tuple, p2: Tuple, p3: Tuple,
                      val n1: Tuple, val n2: Tuple, val n3: Tuple,

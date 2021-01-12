@@ -6,6 +6,7 @@ import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
 import krater.model.pattern.noise.PerlinNoise
+import krater.model.shapes.*
 import java.io.File
 import kotlin.math.PI
 

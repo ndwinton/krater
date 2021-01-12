@@ -1,11 +1,11 @@
 package krater
 
-import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
 import krater.model.pattern.noise.PerlinNoise
+import krater.model.shapes.Plane
 import krater.model.wavefront.ObjParser
 import java.io.File
 import kotlin.math.PI

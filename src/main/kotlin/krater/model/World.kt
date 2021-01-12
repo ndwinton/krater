@@ -3,6 +3,7 @@ package krater.model
 import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.geometry.Tuple
+import krater.model.shapes.Shape
 import kotlin.math.sqrt
 
 const val MAX_RECURSION = 5

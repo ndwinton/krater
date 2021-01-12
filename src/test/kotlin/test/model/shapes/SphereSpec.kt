@@ -1,4 +1,4 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -6,8 +6,7 @@ import krater.geometry.*
 import krater.model.Intersection
 import krater.model.Material
 import krater.model.Ray
-import krater.model.Sphere
-import kotlin.math.PI
+import krater.model.shapes.Sphere
 import kotlin.math.sqrt
 
 class SphereSpec : FunSpec({

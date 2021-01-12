@@ -12,6 +12,9 @@ import io.kotest.matchers.doubles.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
 import krater.model.*
+import krater.model.shapes.Plane
+import krater.model.shapes.Sphere
+import krater.model.shapes.Triangle
 import kotlin.math.sqrt
 
 class IntersectionSpec : FunSpec({

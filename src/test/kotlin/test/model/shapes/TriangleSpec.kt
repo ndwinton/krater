@@ -1,4 +1,4 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 import krater.geometry.point
 import krater.geometry.vector
 import krater.model.Ray
-import krater.model.Triangle
+import krater.model.shapes.Triangle
 
 class TriangleSpec :  FunSpec({
 

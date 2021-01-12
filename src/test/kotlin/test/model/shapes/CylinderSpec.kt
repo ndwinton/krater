@@ -1,4 +1,4 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
@@ -10,7 +10,7 @@ import io.kotest.matchers.shouldBe
 import krater.geometry.near
 import krater.geometry.point
 import krater.geometry.vector
-import krater.model.Cylinder
+import krater.model.shapes.Cylinder
 import krater.model.Ray
 
 class CylinderSpec : FunSpec({

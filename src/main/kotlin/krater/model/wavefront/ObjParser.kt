@@ -1,16 +1,16 @@
 package krater.model.wavefront
 
 import krater.geometry.*
-import krater.model.Group
+import krater.model.shapes.Group
 import krater.model.Material
-import krater.model.SmoothTriangle
-import krater.model.Triangle
+import krater.model.shapes.SmoothTriangle
+import krater.model.shapes.Triangle
 import java.io.File
 
 class ObjParser(
     val vertices: List<Tuple>,
     val normals: List<Tuple>,
-    val namedGroups: Map<String,Group>,
+    val namedGroups: Map<String, Group>,
     ) {
     val defaultGroup: Group = namedGroups[""]!!
 
@@ -107,9 +107,9 @@ class ObjParser(
             lines: List<List<String>>,
             seenVertices: List<Tuple>,
             seenNormals: List<Tuple>,
-            result: Map<String,Group> = emptyMap(),
+            result: Map<String, Group> = emptyMap(),
             material: Material
-        ): Map<String,Group> {
+        ): Map<String, Group> {
             val currentFaces = lines.takeWhile { it[0] != "g" }
             val currentGroup = Group(shapes = parseFaces(currentFaces, seenVertices, seenNormals, material))
             val groupEntry = Pair(currentName, currentGroup)

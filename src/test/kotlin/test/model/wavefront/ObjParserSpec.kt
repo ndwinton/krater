@@ -8,8 +8,8 @@ import krater.geometry.point
 import krater.geometry.scaling
 import krater.geometry.vector
 import krater.model.Material
-import krater.model.SmoothTriangle
-import krater.model.Triangle
+import krater.model.shapes.SmoothTriangle
+import krater.model.shapes.Triangle
 
 import krater.model.wavefront.ObjParser
 

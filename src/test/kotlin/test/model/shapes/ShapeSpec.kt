@@ -1,4 +1,4 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -10,6 +10,9 @@ import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.Stripe
+import krater.model.shapes.Group
+import krater.model.shapes.Shape
+import krater.model.shapes.Sphere
 import kotlin.math.PI
 import kotlin.math.sqrt
 
@@ -148,7 +151,7 @@ class ShapeSpec : FunSpec({
     test("Converting a point from world to object space") {
         val s = Sphere(transform = translation(5, 0, 0))
         val g2 = Group(transform = scaling(2, 2, 2), shapes = listOf(s))
-        val g1 = Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
+        Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
         val p = s.worldToObject(point(-2, 0, -10))
 
         p.shouldBe(point(0, 0, -1))
@@ -157,7 +160,7 @@ class ShapeSpec : FunSpec({
     test("Converting a normal from object to world space") {
         val s = Sphere(transform = translation(5, 0, 0))
         val g2 = Group(transform = scaling(1, 2, 3), shapes = listOf(s))
-        val g1 = Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
+        Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
 
         val n = s.normalToWorld(vector(sqrt(3.0) / 3, sqrt(3.0) / 3, sqrt(3.0) / 3))
 
@@ -167,7 +170,7 @@ class ShapeSpec : FunSpec({
     test("Finding the normal on a child object") {
         val s = Sphere(transform = translation(5, 0, 0))
         val g2 = Group(transform = scaling(1, 2, 3), shapes = listOf(s))
-        val g1 = Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
+        Group(transform = rotationY(Math.PI / 2), shapes = listOf(g2))
 
         val n = s.normalAt(point(1.7321, 1.1547, -5.5774))
 

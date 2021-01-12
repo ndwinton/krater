@@ -1,11 +1,12 @@
 package krater
 
-import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
 import krater.model.pattern.noise.PerlinNoise
+import krater.model.shapes.Cylinder
+import krater.model.shapes.Plane
 import java.io.File
 import kotlin.math.PI
 
@@ -49,7 +50,7 @@ fun main(args: Array<String>) {
             PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
         ),
-        objects = listOf(floor, sky)
+        objects = listOf(floor, sky, cylinder)
     )
 
     val camera = Camera(size, size, PI / 3, viewTransform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0)))

@@ -1,4 +1,4 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
@@ -11,6 +11,7 @@ import krater.geometry.point
 import krater.geometry.translation
 import krater.geometry.vector
 import krater.model.*
+import krater.model.shapes.*
 
 class CsgSpec : FunSpec({
     test("CSG is created with an operation and two shapes") {

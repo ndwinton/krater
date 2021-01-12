@@ -9,7 +9,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import krater.geometry.point
 import krater.geometry.vector
-import krater.model.Cube
+import krater.model.shapes.Cube
 import krater.model.Ray
 
 class CubeSpec : FunSpec({

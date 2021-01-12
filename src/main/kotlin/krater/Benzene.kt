@@ -5,6 +5,10 @@ import krater.canvas.Color
 import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
+import krater.model.shapes.Cylinder
+import krater.model.shapes.Group
+import krater.model.shapes.Plane
+import krater.model.shapes.Sphere
 import java.io.File
 import kotlin.math.PI
 

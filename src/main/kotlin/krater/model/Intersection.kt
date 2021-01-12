@@ -2,6 +2,7 @@ package krater.model
 
 import krater.geometry.Tuple
 import krater.geometry.vector
+import krater.model.shapes.Shape
 
 data class Intersection(val t: Double, val shape: Shape, val u: Double = Double.NaN, val v: Double = Double.NaN)
 

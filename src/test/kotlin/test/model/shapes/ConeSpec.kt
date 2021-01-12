@@ -1,4 +1,4 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
@@ -9,8 +9,7 @@ import io.kotest.matchers.shouldBe
 import krater.geometry.near
 import krater.geometry.point
 import krater.geometry.vector
-import krater.model.Cone
-import krater.model.NO_INTERSECTION
+import krater.model.shapes.Cone
 import krater.model.Ray
 import kotlin.math.sqrt
 

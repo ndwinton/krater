@@ -1,8 +1,10 @@
-package krater.model
+package krater.model.shapes
 
 import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.Matrix
 import krater.geometry.Tuple
+import krater.model.Intersection
+import krater.model.Ray
 
 class Group(transform: Matrix = IDENTITY_4X4_MATRIX, val shapes: List<Shape> = emptyList()) : Shape(transform = transform) {
 

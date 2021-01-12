@@ -1,6 +1,9 @@
-package krater.model
+package krater.model.shapes
 
 import krater.geometry.*
+import krater.model.Intersection
+import krater.model.Material
+import krater.model.Ray
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 

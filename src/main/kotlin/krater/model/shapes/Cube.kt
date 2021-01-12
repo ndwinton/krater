@@ -1,10 +1,14 @@
-package krater.model
+package krater.model.shapes
 
 import krater.geometry.*
+import krater.model.Intersection
+import krater.model.Material
+import krater.model.Ray
 import kotlin.math.absoluteValue
 
 class Cube(transform: Matrix = IDENTITY_4X4_MATRIX,
-           material: Material = Material()) : Shape(transform = transform, material = material) {
+           material: Material = Material()
+) : Shape(transform = transform, material = material) {
     override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple =
         when (maxOf(objectPoint.x.absoluteValue, objectPoint.y.absoluteValue, objectPoint.z.absoluteValue)) {
             objectPoint.x.absoluteValue -> vector(objectPoint.x, 0, 0)

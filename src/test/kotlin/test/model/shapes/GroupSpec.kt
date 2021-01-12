@@ -1,14 +1,13 @@
-package test.model
+package test.model.shapes
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
-import krater.model.Group
+import krater.model.shapes.Group
 import krater.model.Ray
-import krater.model.Sphere
-import java.lang.Math.PI
+import krater.model.shapes.Sphere
 
 class GroupSpec : FunSpec({
 

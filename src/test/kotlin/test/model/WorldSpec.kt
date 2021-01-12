@@ -13,6 +13,8 @@ import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.Pattern
+import krater.model.shapes.Plane
+import krater.model.shapes.Sphere
 import kotlin.math.sqrt
 
 class WorldSpec : FunSpec ({
