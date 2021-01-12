@@ -14,9 +14,13 @@ class Csg(
     val operation: CsgOperation,
     val left: Shape,
     val right: Shape,
-    material: Material = Material(),
     transform: Matrix = IDENTITY_4X4_MATRIX
-) : Shape(material = material, transform = transform) {
+) : Shape(transform = transform) {
+
+    init {
+        left.parent = this
+        right.parent = this
+    }
 
     override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple {
         throw NotImplementedError("localNormalAt should never be called on a CSG object")

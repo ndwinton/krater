@@ -21,6 +21,8 @@ class CsgSpec : FunSpec({
 
         c.left.shouldBe(s1)
         c.right.shouldBe(s2)
+        s1.parent.shouldBe(c)
+        s2.parent.shouldBe(c)
     }
 
     test("Evaluating the intersection allowed rule for a union operation") {
@@ -72,16 +74,16 @@ class CsgSpec : FunSpec({
     }
 
     test("Filtering a list of intersections") {
-        val s1 = Sphere()
-        val s2 = Cube()
-        val xs = listOf(Intersection(1.0, s1), Intersection(2.0, s2), Intersection(3.0, s1), Intersection(4.0, s2))
-
         table(
             headers("op", "x0", "x1"),
             row(UNION, 0, 3),
             row(INTERSECT, 1, 2),
             row(DIFFERENCE, 0, 1),
         ).forAll { op, x0, x1 ->
+            val s1 = Sphere()
+            val s2 = Cube()
+            val xs = listOf(Intersection(1.0, s1), Intersection(2.0, s2), Intersection(3.0, s1), Intersection(4.0, s2))
+
             val c = Csg(op, s1, s2)
 
             val result = c.filterIntersections(xs)
