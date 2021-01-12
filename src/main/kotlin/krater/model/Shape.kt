@@ -55,4 +55,6 @@ abstract class Shape(
         val transposed = groupedTransposedInverse * normal
         return vector(transposed.x, transposed.y, transposed.z).normalize()
     }
+
+    open fun includes(shape: Shape) = this.equals(shape)
 }

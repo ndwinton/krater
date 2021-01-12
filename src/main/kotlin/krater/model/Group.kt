@@ -16,4 +16,6 @@ class Group(transform: Matrix = IDENTITY_4X4_MATRIX, val shapes: List<Shape> = e
 
     override fun localIntersect(objectRay: Ray): List<Intersection> =
         shapes.flatMap { it.intersect(objectRay) }.sortedBy { it.t }
+
+    override fun includes(shape: Shape): Boolean = this.equals(shape) || shapes.any { it.includes(shape) }
 }
