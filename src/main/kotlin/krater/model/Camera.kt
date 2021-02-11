@@ -27,16 +27,17 @@ class Camera(val hsize: Int, val vsize: Int, val fieldOfView: Double, val transf
     fun render(world: World): Canvas {
         val image = Canvas(hsize, vsize)
         (0 until vsize).forEach { y ->
-            runBlocking {
-                (0 until hsize).map { x ->
-                    launch(Dispatchers.Default) {
-                        val ray = rayForPixel(x, y)
-                        val color = world.colorAt(ray)
-                        image[x, y] = color
-                    }
-                }
-            }
+            val row = renderRow(y, world, image)
+            row.forEachIndexed { x, color -> image[x, y] = color }
         }
         return image
     }
+
+    private fun renderRow(y: Int, world: World, image: Canvas) = runBlocking {
+            (0 until hsize).map { x ->
+                async(Dispatchers.Default) {
+                    world.colorAt(rayForPixel(x, y))
+                }
+            }.map { it.await() }
+        }
 }
