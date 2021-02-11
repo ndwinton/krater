@@ -1,5 +1,6 @@
 package krater.model
 
+import kotlinx.coroutines.*
 import krater.canvas.Canvas
 import krater.geometry.*
 import kotlin.math.tan
@@ -26,10 +27,14 @@ class Camera(val hsize: Int, val vsize: Int, val fieldOfView: Double, val transf
     fun render(world: World): Canvas {
         val image = Canvas(hsize, vsize)
         (0 until vsize).forEach { y ->
-            (0 until hsize).forEach { x ->
-                val ray = rayForPixel(x, y)
-                val color = world.colorAt(ray)
-                image[x, y] = color
+            runBlocking {
+                (0 until hsize).map { x ->
+                    launch(Dispatchers.Default) {
+                        val ray = rayForPixel(x, y)
+                        val color = world.colorAt(ray)
+                        image[x, y] = color
+                    }
+                }
             }
         }
         return image
