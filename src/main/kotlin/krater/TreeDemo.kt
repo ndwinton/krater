@@ -71,9 +71,9 @@ fun tree(level: Int): Shape {
     if (level == 0 || (level == 1 && Random.nextInt(0, 10) > 6)) return Sphere(
         material = leafTexture,
         transform = scaling(
-            Random.nextDouble(0.7, 1.0),
-            Random.nextDouble(0.7, 1.0),
-            Random.nextDouble(0.7, 1.0)
+            Random.nextDouble(0.4, 0.7),
+            Random.nextDouble(0.4, 0.7),
+            Random.nextDouble(0.4, 0.7)
         )
     )
 
