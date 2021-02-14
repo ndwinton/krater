@@ -21,7 +21,7 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
                 computation.point,
                 computation.eyev,
                 computation.normalv,
-                isShadowed(light, computation.overPoint)
+                intensityAt(light, computation.overPoint)
             )
         } + reflectedPlusRefracted(computation, remaining)
 
@@ -43,8 +43,8 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
         return if (hit == NO_INTERSECTION) BLACK else shadeHit(PreparedComputation(hit, ray, allIntersections), remaining)
     }
 
-    fun isShadowed(light: Light, point: Tuple): Boolean {
-        val vector = light.position - point
+    fun isShadowed(lightPosition: Tuple, point: Tuple): Boolean {
+        val vector = lightPosition - point
         val distance = vector.magnitude()
         val direction = vector.normalize()
         val ray = Ray(point, direction)
@@ -76,4 +76,6 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
             }
         }
     }
+
+    fun intensityAt(light: Light, point: Tuple) = light.intensityAt(point, this::isShadowed)
 }

@@ -7,11 +7,15 @@ import krater.geometry.point
 
 val DARKNESS = object : Light {
     override val position = point(0, 0, 0)
-    override val intensity = BLACK
+    override val color = BLACK
+    override fun intensityAt(point: Tuple, shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean) = 0.0
+
     override fun toString() = "Light.DARKNESS"
 }
 
 interface Light {
     val position: Tuple
-    val intensity: Color
+    val color: Color
+
+    fun intensityAt(point: Tuple, shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean): Double
 }

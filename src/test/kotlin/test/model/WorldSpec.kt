@@ -1,6 +1,10 @@
 package test.model
 
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.forAll
+import io.kotest.data.headers
+import io.kotest.data.row
+import io.kotest.data.table
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.doubles.shouldBeGreaterThan
@@ -17,17 +21,17 @@ import krater.model.shapes.Plane
 import krater.model.shapes.Sphere
 import kotlin.math.sqrt
 
-class WorldSpec : FunSpec ({
-    val light1 = PointLight(point(-10, 10, -10), WHITE)
-    val light2 = PointLight(point(10, 10, -10), WHITE)
-    val defaultWorld = World(
-        lights = listOf(light1),
-        objects = listOf(
-            Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
-            Sphere(transform = scaling(0.5, 0.5, 0.5))
-        )
+val light1 = PointLight(point(-10, 10, -10), WHITE)
+val light2 = PointLight(point(10, 10, -10), WHITE)
+val defaultWorld = World(
+    lights = listOf(light1),
+    objects = listOf(
+        Sphere(material = Material(color = Color(0.8, 1.0, 0.6), diffuse = 0.7, specular = 0.2)),
+        Sphere(transform = scaling(0.5, 0.5, 0.5))
     )
+)
 
+class WorldSpec : FunSpec ({
     test("Creating a world") {
         val w = World()
 
@@ -168,20 +172,17 @@ class WorldSpec : FunSpec ({
         c.shouldBe(inner.material.color + inner.material.color)
     }
 
-    test("There is no shadow when nothing is collinear with point and light") {
-        defaultWorld.isShadowed(light1, point(0, 10, 0)).shouldBe(false)
-    }
-
-    test("The shadow when an object is between the point and the light") {
-        defaultWorld.isShadowed(light1, point(10, -10, 10)).shouldBe(true)
-    }
-
-    test("There is no shadow when an object is behind the light") {
-        defaultWorld.isShadowed(light1, point(-20, 20, -20)).shouldBe(false)
-    }
-
-    test("There is no shadow when an object is behind the point") {
-        defaultWorld.isShadowed(light1, point(-2, 2, -2)).shouldBe(false)
+    test("isShadowed test for occlusion between two points") {
+        val lightPosition = point(-10, -10, -10)
+        table(
+            headers("point", "result"),
+            row(point(-10, -10, 10), false),
+            row(point(10, 10, 10), true),
+            row(point(-20, -20, -20), false),
+            row(point(-5, -5, -5), false)
+        ).forAll { point, result ->
+            defaultWorld.isShadowed(lightPosition, point).shouldBe(result)
+        }
     }
 
     test("The shadow when an object material shadow property is false") {
@@ -192,7 +193,7 @@ class WorldSpec : FunSpec ({
                     diffuse = 0.7, specular = 0.2, shadow = false)),
             )
         )
-        w.isShadowed(light1, point(10, -10, 10)).shouldBe(false)
+        w.isShadowed(light1.position, point(10, -10, 10)).shouldBe(false)
     }
 
     test("shadeHit is given an intersection in shadow") {
@@ -455,5 +456,22 @@ class WorldSpec : FunSpec ({
         val color = w.shadeHit(comps, 5)
 
         color.shouldBe(Color(0.93391, 0.69643, 0.69243))
+    }
+
+    test("Point lights evaluate the light intensity at a given point") {
+        val light = defaultWorld.lights[0]
+
+        table(
+            headers("point", "result"),
+            row(point(0, 1.0001, 0), 1.0),
+            row(point(-1.0001, 0, 0), 1.0),
+            row(point(0, 0, -1.0001), 1.0),
+            row(point(0, 0, 1.0001), 0.0),
+            row(point( 1.0001, 0, 0), 0.0),
+            row(point(0,  -1.0001, 0), 0.0),
+            row(point(0, 0, 0), 0.0),
+        ).forAll { point, result ->
+            defaultWorld.intensityAt(light, point).shouldBe(result)
+        }
     }
 })

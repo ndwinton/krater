@@ -31,7 +31,7 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
 
-        defaultMaterial.lighting(light, position, eyev, normalv, false).shouldBe(Color(1.9, 1.9, 1.9))
+        defaultMaterial.lighting(light, position, eyev, normalv, 1.0).shouldBe(Color(1.9, 1.9, 1.9))
     }
 
     test("Lighting with the eye between light and surface, eye offset 45º") {
@@ -39,7 +39,7 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
 
-        defaultMaterial.lighting(light, position, eyev, normalv, false).shouldBe(Color(1.0, 1.0, 1.0))
+        defaultMaterial.lighting(light, position, eyev, normalv, 1.0).shouldBe(Color(1.0, 1.0, 1.0))
     }
 
     test("Lighting with the eye opposite surface, light offset 45º") {
@@ -47,7 +47,7 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 10, -10), Color(1.0, 1.0, 1.0))
 
-        defaultMaterial.lighting(light, position, eyev, normalv, false).shouldBe(Color(0.7364, 0.7364, 0.7364))
+        defaultMaterial.lighting(light, position, eyev, normalv, 1.0).shouldBe(Color(0.7364, 0.7364, 0.7364))
     }
 
     test("Lighting with the eye in the path of the reflection vector") {
@@ -55,7 +55,7 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 10, -10), Color(1.0, 1.0, 1.0))
 
-        defaultMaterial.lighting(light, position, eyev, normalv, false).shouldBe(Color(1.6364, 1.6364, 1.6364))
+        defaultMaterial.lighting(light, position, eyev, normalv, 1.0).shouldBe(Color(1.6364, 1.6364, 1.6364))
     }
 
     test("Lighting with the light behind the surface") {
@@ -63,7 +63,7 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 0, 10), Color(1.0, 1.0, 1.0))
 
-        defaultMaterial.lighting(light, position, eyev, normalv, false).shouldBe(Color(0.1, 0.1, 0.1))
+        defaultMaterial.lighting(light, position, eyev, normalv, 1.0).shouldBe(Color(0.1, 0.1, 0.1))
     }
 
     test("Lighting with the surface in shadow") {
@@ -71,7 +71,7 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
 
-        defaultMaterial.lighting(light, position, eyev, normalv, inShadow = true).shouldBe(Color(0.1, 0.1, 0.1))
+        defaultMaterial.lighting(light, position, eyev, normalv, intensity = 0.0).shouldBe(Color(0.1, 0.1, 0.1))
     }
 
     test("Lighting with a pattern applied") {
@@ -86,8 +86,8 @@ class MaterialSpec : FunSpec({
         val normalv = vector(0, 0, -1)
         val light = PointLight(point(0, 0, -10), WHITE)
 
-        val c1 = m.lighting(light, point(0.9, 0, 0), eyev, normalv, false)
-        val c2 = m.lighting(light, point(1.1, 0, 0), eyev, normalv, false)
+        val c1 = m.lighting(light, point(0.9, 0, 0), eyev, normalv, 1.0)
+        val c2 = m.lighting(light, point(1.1, 0, 0), eyev, normalv, 1.0)
 
         c1.shouldBe(WHITE)
         c2.shouldBe(BLACK)

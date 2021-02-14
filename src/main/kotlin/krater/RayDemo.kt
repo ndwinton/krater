@@ -125,8 +125,16 @@ fun main(args: Array<String>) {
 
     val world = World(
         lights = listOf(
-            PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
-            PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
+            //PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
+            AreaLight(point(-10, 10, -10),
+                vector(1, 0, 0), 4,
+                vector(0, 1, 0), 4,
+                Color(0.75, 0.5, 0.25)
+            ),
+            AreaLight(point(-5, 10, -10),
+                vector(1, 0, 0), 4,
+                vector(0, 1, 0), 4,
+                Color(0.25, 0.5, 0.75))
         ),
         objects = listOf(floor, midGroup, right, sky, box, pipe, cylinder, cone)
     )
