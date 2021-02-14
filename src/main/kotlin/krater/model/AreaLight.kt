@@ -25,10 +25,5 @@ class AreaLight(val corner: Tuple,
             if (shadowEvaluator(it, point)) 0.0 else 1.0
         }.average()
 
-    fun cellPoint(u: Int, v: Int): Tuple {
-        val j1 = jitter()
-        val j2 = jitter()
-        println("$j1, $j2")
-        return corner + uVec * (u + jitter()) + vVec * (v + jitter())
-    }
+    fun cellPoint(u: Int, v: Int): Tuple = corner + uVec * (u + jitter()) + vVec * (v + jitter())
 }
