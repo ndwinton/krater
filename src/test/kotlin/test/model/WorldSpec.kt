@@ -457,21 +457,4 @@ class WorldSpec : FunSpec ({
 
         color.shouldBe(Color(0.93391, 0.69643, 0.69243))
     }
-
-    test("Point lights evaluate the light intensity at a given point") {
-        val light = defaultWorld.lights[0]
-
-        table(
-            headers("point", "result"),
-            row(point(0, 1.0001, 0), 1.0),
-            row(point(-1.0001, 0, 0), 1.0),
-            row(point(0, 0, -1.0001), 1.0),
-            row(point(0, 0, 1.0001), 0.0),
-            row(point( 1.0001, 0, 0), 0.0),
-            row(point(0,  -1.0001, 0), 0.0),
-            row(point(0, 0, 0), 0.0),
-        ).forAll { point, result ->
-            defaultWorld.intensityAt(light, point).shouldBe(result)
-        }
-    }
 })

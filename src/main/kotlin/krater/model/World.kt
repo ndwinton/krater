@@ -16,12 +16,12 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
 
     fun shadeHit(computation: PreparedComputation, remaining: Int = MAX_RECURSION) =
         lights.fold(BLACK) { color, light ->
-            color + computation.intersection.shape.lighting(
-                light,
+            color + light.lighting(
+                computation.intersection.shape,
                 computation.point,
                 computation.eyev,
                 computation.normalv,
-                intensityAt(light, computation.overPoint)
+                this::isShadowed
             )
         } + reflectedPlusRefracted(computation, remaining)
 
@@ -76,6 +76,4 @@ class World(val objects: List<Shape> = emptyList(), val lights: List<Light> = li
             }
         }
     }
-
-    fun intensityAt(light: Light, point: Tuple) = light.intensityAt(point, this::isShadowed)
 }

@@ -1,10 +1,8 @@
 package krater.model
 
-import krater.canvas.BLACK
 import krater.canvas.Color
 import krater.canvas.ColorProvider
 import krater.geometry.*
-import kotlin.math.pow
 
 class Material(
     val ambient: Double = 0.1,
@@ -44,26 +42,4 @@ class Material(
         result = 31 * result + pattern.hashCode()
         return result
     }
-
-    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, intensity: Double, objectPoint: Tuple = position): Color {
-        val lightv = (light.position - position).normalize()
-        val reflectv = -(lightv.reflect(normalv))
-        val effectiveColor = pattern.colorAtObject(objectPoint) * light.color
-        val effectiveAmbient = effectiveColor * ambient
-
-        if (isLightBehindSurface(lightv, normalv) || intensity.near(0.0)) {
-            return effectiveAmbient
-        }
-
-        val effectiveDiffuse = effectiveColor * diffuse * lightv.dot(normalv) * intensity
-        val effectiveSpecular = calculateEffectiveSpecular(reflectv, eyev, light) * intensity
-        return effectiveAmbient + effectiveDiffuse + effectiveSpecular
-    }
-
-    private fun calculateEffectiveSpecular(reflectv: Tuple, eyev: Tuple, light: Light): Color {
-        val dotProduct = reflectv.dot(eyev)
-        return if (dotProduct <= 0.0) BLACK else light.color * specular * dotProduct.pow(shininess)
-    }
-
-    private fun isLightBehindSurface(lightv: Tuple, normalv: Tuple) = lightv.dot(normalv) < 0.0
 }

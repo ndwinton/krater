@@ -17,13 +17,13 @@ class AreaLight(val corner: Tuple,
     override val position = corner + ((u + v) / 2)
 
     override fun intensityAt(point: Tuple, shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean) =
-        (0 until uSteps).flatMap { u ->
-            (0 until vSteps).map { v ->
-                cellPoint(u, v)
+        (0 until uSteps).flatMap { uStep ->
+            (0 until vSteps).map { vStep ->
+                cellPoint(uStep, vStep)
             }
         }.map {
             if (shadowEvaluator(it, point)) 0.0 else 1.0
         }.average()
 
-    fun cellPoint(u: Int, v: Int): Tuple = corner + uVec * (u + jitter()) + vVec * (v + jitter())
+    fun cellPoint(uStep: Int, vStep: Int): Tuple = corner + uVec * (uStep + jitter()) + vVec * (vStep + jitter())
 }

@@ -17,8 +17,6 @@ import kotlin.math.PI
 import kotlin.math.sqrt
 
 class ShapeSpec : FunSpec({
-    val position = point(0, 0, 0)
-    val shape = TestShape()
 
     test("A shape's default transformation") {
         val s = TestShape()
@@ -90,46 +88,6 @@ class ShapeSpec : FunSpec({
 
         n.shouldBe(vector(0, 0.97014, -0.24254))
         s.savedPoint.shouldBe(point(0.83125, 1.14412, -0.70711))
-    }
-
-    // A reduced set of the tests in MaterialSpec, reflecting the pass-through
-
-    test("Lighting with the eye between light and surface") {
-        val eyev =  vector(0, 0, -1)
-        val normalv = vector(0, 0, -1)
-        val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
-
-        shape.lighting(light, position, eyev, normalv, 1.0).shouldBe(Color(1.9, 1.9, 1.9))
-    }
-
-    test("Lighting with the surface in shadow") {
-        val eyev =  vector(0, 0, -1)
-        val normalv = vector(0, 0, -1)
-        val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
-
-        shape.lighting(light, position, eyev, normalv, intensity = 0.0).shouldBe(Color(0.1, 0.1, 0.1))
-    }
-
-    test("Lighting with a pattern applied and shape transformed") {
-        val s = TestShape(
-            material = Material(
-                pattern = Stripe(WHITE, BLACK),
-                ambient = 1.0,
-                diffuse = 0.0,
-                specular = 0.0,
-            ),
-            transform = translation(0.5, 0, 0)
-        )
-
-        val eyev = vector(0, 0, -1)
-        val normalv = vector(0, 0, -1)
-        val light = PointLight(point(0, 0, -10), WHITE)
-
-        val c1 = s.lighting(light, point(1.4, 0, 0), eyev, normalv, 1.0)
-        val c2 = s.lighting(light, point(1.6, 0, 0), eyev, normalv, 1.0)
-
-        c1.shouldBe(WHITE)
-        c2.shouldBe(BLACK)
     }
 
     test("A shape has a parent attribute") {

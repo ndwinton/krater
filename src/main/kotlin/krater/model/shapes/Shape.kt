@@ -46,10 +46,6 @@ abstract class Shape(
 
     abstract fun localIntersect(objectRay: Ray): List<Intersection>
 
-    fun lighting(light: Light, position: Tuple, eyev: Tuple, normalv: Tuple, intensity: Double): Color {
-        return material.lighting(light, position, eyev,normalv, intensity, worldToObject(position))
-    }
-
     fun worldToObject(point: Tuple): Tuple = groupedInverseTransform * point
 
     fun normalToWorld(normal: Tuple): Tuple {
