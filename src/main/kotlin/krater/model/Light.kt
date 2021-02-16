@@ -12,7 +12,7 @@ import kotlin.math.pow
 val DARKNESS = object : Light {
     override val position = point(0, 0, 0)
     override val color = BLACK
-    override fun intensityAt(point: Tuple, shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean) = 0.0
+    override val samples = listOf(position)
 
     override fun toString() = "Light.DARKNESS"
 }
@@ -20,8 +20,7 @@ val DARKNESS = object : Light {
 interface Light {
     val position: Tuple
     val color: Color
-
-    fun intensityAt(point: Tuple, shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean): Double
+    val samples: List<Tuple>
 
     fun lighting(
         shape: Shape,
@@ -32,21 +31,38 @@ interface Light {
     ): Color {
         val objectPoint = shape.worldToObject(point)
         val overPoint = point + normalv * EPSILON
-        val intensity = intensityAt(overPoint, shadowEvaluator)
-        val lightv = (position - point).normalize()
-        val reflectv = -(lightv.reflect(normalv))
         val material = shape.material
-        val effectiveColor = shape.material.pattern.colorAtObject(objectPoint) * color
+        val effectiveColor = material.pattern.colorAtObject(objectPoint) * color
         val effectiveAmbient = effectiveColor * material.ambient
+        val currentSamples = samples
+        val summedColor = currentSamples.map { samplePoint ->
+            val lightv = (samplePoint - point).normalize()
+            val reflectv = -(lightv.reflect(normalv))
+            val intensity = intensityFromSampleAtPoint(samplePoint, overPoint, shadowEvaluator)
 
-        if (isLightBehindSurface(lightv, normalv) || intensity.near(0.0)) {
-            return effectiveAmbient
-        }
-
-        val effectiveDiffuse = effectiveColor * material.diffuse * lightv.dot(normalv) * intensity
-        val effectiveSpecular = calculateEffectiveSpecular(material, reflectv, eyev) * intensity
-        return effectiveAmbient + effectiveDiffuse + effectiveSpecular
+            if (isLightBehindSurface(lightv, normalv) || intensity.near(0.0)) {
+                effectiveAmbient
+            } else {
+                val effectiveDiffuse = effectiveColor * material.diffuse * lightv.dot(normalv) * intensity
+                val effectiveSpecular = calculateEffectiveSpecular(material, reflectv, eyev) * intensity
+                effectiveAmbient + effectiveDiffuse + effectiveSpecular
+            }
+        }.reduce { acc, color ->  acc + color }
+        return Color(
+            summedColor.red / currentSamples.size,
+            summedColor.green / currentSamples.size,
+            summedColor.blue / currentSamples.size
+        )
     }
+
+    fun intensityAt(point: Tuple, shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean) =
+        samples.map { samplePoint -> intensityFromSampleAtPoint(samplePoint, point, shadowEvaluator) }.average()
+
+    private fun intensityFromSampleAtPoint(
+        samplePoint: Tuple,
+        point: Tuple,
+        shadowEvaluator: (lightPosition: Tuple, point: Tuple) -> Boolean
+    ) = if (shadowEvaluator(samplePoint, point)) 0.0 else 1.0
 
     private fun calculateEffectiveSpecular(material: Material, reflectv: Tuple, eyev: Tuple): Color {
         val dotProduct = reflectv.dot(eyev)

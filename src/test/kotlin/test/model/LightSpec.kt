@@ -5,6 +5,7 @@ import io.kotest.data.forAll
 import io.kotest.data.headers
 import io.kotest.data.row
 import io.kotest.data.table
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
 import krater.canvas.Color
@@ -14,6 +15,7 @@ import krater.model.PointLight
 import krater.model.AreaLight
 import krater.model.Material
 import krater.model.pattern.Stripe
+import krater.model.shapes.Sphere
 import test.model.shapes.TestShape
 import kotlin.math.sqrt
 
@@ -21,6 +23,8 @@ class LightSpec : FunSpec({
     val noJitter = {  0.5 }
     val shape = TestShape(material = Material())
     val origin = point(0, 0, 0)
+    val unshadowed = { _: Tuple, _: Tuple -> false }
+    val shadowed = { _: Tuple, _: Tuple -> true }
 
     test("A point light has a position and intensity") {
         val color = Color(1.0, 1.0, 1.0)
@@ -32,11 +36,19 @@ class LightSpec : FunSpec({
         light.color.shouldBe(color)
     }
 
+    test("A point light has one sample, the same as its position") {
+        val position = point(1, 2, 3)
+
+        val light = PointLight(position, WHITE)
+
+        light.samples.shouldBe(listOf(position))
+    }
+
     test("Calculate intensity at a point derived from light for a PointLight") {
         val light = PointLight(point(0, 0, 0), WHITE)
 
-        light.intensityAt(point(1, 0, 0), { _, _ -> true }).shouldBe(0.0)
-        light.intensityAt(point(1, 0, 0), { _, _ -> false }).shouldBe(1.0)
+        light.intensityAt(point(1, 0, 0), shadowed).shouldBe(0.0)
+        light.intensityAt(point(1, 0, 0), unshadowed).shouldBe(1.0)
     }
 
     test("Creating an AreaLight") {
@@ -120,6 +132,22 @@ class LightSpec : FunSpec({
         }
     }
 
+    test("An area light has a sample for each cell") {
+        val corner = point(0, 0, 0)
+        val v1 = vector(2, 0, 0)
+        val v2 = vector(0, 0, 2)
+        val light = AreaLight(corner, v1, 2, v2, 2, WHITE,
+            jitter = repeat(listOf(0.0))
+        )
+
+        light.samples.shouldContainExactlyInAnyOrder(listOf(
+            point(0, 0, 0),
+            point(0, 0, 1),
+            point(1, 0, 0),
+            point(1, 0, 1)
+        ))
+    }
+
     test("The area light with jittered samples") {
         val corner = point(-0.5, -0.5, -5)
         val v1 = vector(1, 0, 0)
@@ -140,9 +168,6 @@ class LightSpec : FunSpec({
             light.intensityAt(point, shadowEvaluator).shouldBe(result)
         }
     }
-
-    val unshadowed = { _: Tuple, _: Tuple -> false }
-    val shadowed = { _: Tuple, _: Tuple -> true }
 
     test("Lighting with the eye between light and surface") {
         val light = PointLight(point(0, 0, -10), Color(1.0, 1.0, 1.0))
@@ -232,6 +257,25 @@ class LightSpec : FunSpec({
 
         c1.shouldBe(WHITE)
         c2.shouldBe(BLACK)
+    }
+    test("Phong shading samples the area light") {
+        val corner = point(-0.5, -0.5, -5)
+        val v1 = vector(1, 0, 0)
+        val v2 = vector(0, 1, 0)
+        val light = AreaLight(corner, v1, 2, v2, 2, WHITE, jitter = { 0.5 })
+        val sphere = Sphere(
+            material = Material(ambient = 0.1, diffuse = 0.9, specular = 0.0, color = WHITE)
+        )
+        val eye = point(0, 0, -5)
+        table(
+            headers("point", "result"),
+            row(point(0, 0, -1), Color(0.9965, 0.9965, 0.9965)),
+            row(point(0, 0.7071, -0.7071), Color(0.62318, 0.62318, 0.62318)),
+        ).forAll { point, result ->
+            val eyev = (eye - point).normalize()
+            val normalv = vector(point.x, point.y, point.z)
+            light.lighting(sphere, point, eyev, normalv, unshadowed).shouldBe(result)
+        }
     }
 })
 
