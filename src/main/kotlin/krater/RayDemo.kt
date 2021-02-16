@@ -127,8 +127,8 @@ fun main(args: Array<String>) {
         lights = listOf(
             //PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
             AreaLight(point(-10, 10, -10),
-                vector(1, 0, 0), 4,
-                vector(0, 1, 0), 4,
+                vector(5, 0, 0), 5,
+                vector(0, 5, 0), 5,
                 Color(0.75, 0.5, 0.25)
             ),
             AreaLight(point(-5, 10, -10),

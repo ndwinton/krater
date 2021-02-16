@@ -18,6 +18,7 @@ fun main(args: Array<String>) {
 
     val floor = Plane(
         material = Material(
+            ambient = 0.2,
             color = Color(1.0, 0.9, 0.9),
             specular = 0.0,
             reflective = 0.1,
@@ -40,8 +41,7 @@ fun main(args: Array<String>) {
 
     val world = World(
         lights = listOf(
-            PointLight(point(-10, 10, -10), Color(0.75, 0.5, 0.25)),
-            PointLight(point(-5, 10, -10), Color(0.25, 0.5, 0.75))
+            AreaLight(point(-4, 9, -10), vector(0.5, 0, 0), 4, vector(0, 0.5, 0), 4, Color(1.0, 1.0, 1.0))
         ),
         objects = listOf(floor, /*sky,*/ tree(4))
     )
@@ -56,15 +56,7 @@ fun main(args: Array<String>) {
     println("Completed in %.4g seconds".format((stop - start) / 1000.0))
 }
 
-val leafTexture = Material(
-    color = Color(0.0, 0.7, 0.0),
-//    pattern = PerlinNoise(
-//        pattern = Checker(a = Color(0.0, 0.8, 0.0), b = Color(0.0, 0.3, 0.0)),
-//        scale = 2.0,
-//        octaves = 3,
-//        persistence = 0.3
-//    ),
-    transparency = 0.5)
+val leafTexture = Material(color = Color(0.0, 0.7, 0.0), transparency = 0.5)
 val trunkTexture = Material(color = Color(0.5, 0.3, 0.0))
 
 fun tree(level: Int): Shape {
