@@ -134,8 +134,8 @@ class ShapeSpec : FunSpec({
 
     test("A shape has a bounding box") {
         val shape = TestShape()
-        shape.boundingBox.min.shouldBe(point(-42, -42, -42))
-        shape.boundingBox.max.shouldBe(point(42, 42, 42))
+        shape.boundingBox.min.shouldBe(point(-1, -1, -1))
+        shape.boundingBox.max.shouldBe(point(1, 1, 1))
     }
 
     test("Querying a shape's bounding box in its parent's space") {
@@ -159,5 +159,5 @@ class TestShape(transform: Matrix = IDENTITY_4X4_MATRIX, material: Material = Ma
         return emptyList()
     }
 
-    override val boundingBox: BoundingBox = BoundingBox(point(-42, -42, -42), point(42, 42, 42))
+    override val boundingBox: BoundingBox = BoundingBox(point(-1, -1, -1), point(1, 1, 1))
 }

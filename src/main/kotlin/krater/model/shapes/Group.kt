@@ -17,10 +17,21 @@ class Group(transform: Matrix = IDENTITY_4X4_MATRIX, val shapes: List<Shape> = e
     }
 
     override fun localIntersect(objectRay: Ray): List<Intersection> =
-        shapes.flatMap { it.intersect(objectRay) }.sortedBy { it.t }
+        if (boundingBox.isIntersectedBy(objectRay)) {
+            shapes.flatMap { it.intersect(objectRay) }.sortedBy { it.t }
+        } else {
+            emptyList()
+        }
 
     override fun includes(shape: Shape): Boolean = this.equals(shape) || shapes.any { it.includes(shape) }
 
     override val boundingBox: BoundingBox =
         shapes.fold(BoundingBox()) { current, next -> current + next.parentSpaceBounds }
+
+    override val parentSpaceBounds: BoundingBox
+        get() = if (shapes.isEmpty()) BoundingBox() else super.parentSpaceBounds
+
+    override fun toString(): String {
+        return "Group(shapes=$shapes, boundingBox=$boundingBox)"
+    }
 }

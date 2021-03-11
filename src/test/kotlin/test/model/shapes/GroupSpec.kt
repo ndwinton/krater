@@ -3,12 +3,16 @@ package test.model.shapes
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import krater.geometry.*
 import krater.model.shapes.Group
 import krater.model.Ray
+import krater.model.shapes.BoundingBox
 import krater.model.shapes.Cylinder
 import krater.model.shapes.Sphere
+import kotlin.math.PI
 
 class GroupSpec : FunSpec({
 
@@ -67,5 +71,26 @@ class GroupSpec : FunSpec({
         val shape = Group(shapes = listOf(s, c))
         shape.boundingBox.min.shouldBe(point(-4.5, -3, -5))
         shape.boundingBox.max.shouldBe(point(4, 7, 4.5))
+    }
+
+    test("Intersecting ray+group doesn't test children if box is missed") {
+        val child = TestShape()
+        val shape = Group(shapes = listOf(child))
+        val r = Ray(point(0, 0, -5), vector(0, 1, 0))
+        val xs = shape.intersect(r)
+        child.savedRay.shouldBeNull()
+    }
+
+    test("Intersecting ray+group tests children if box is hit") {
+        val child = TestShape()
+        val shape = Group(shapes = listOf(child))
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val xs = shape.intersect(r)
+        child.savedRay.shouldNotBeNull()
+    }
+
+    test("Parent bounding box of an empty transformed group is empty") {
+        val group = Group(transform = rotationX(PI / 4))
+        group.parentSpaceBounds.shouldBe(BoundingBox())
     }
 })

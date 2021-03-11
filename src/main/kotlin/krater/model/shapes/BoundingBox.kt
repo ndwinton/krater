@@ -1,10 +1,13 @@
 package krater.model.shapes
 
+import krater.geometry.EPSILON
 import krater.geometry.Matrix
 import krater.geometry.Tuple
 import krater.geometry.point
+import krater.model.Ray
 import java.lang.Double.max
 import java.lang.Double.min
+import kotlin.math.absoluteValue
 
 class BoundingBox(
     val min: Tuple = point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY),
@@ -52,5 +55,30 @@ class BoundingBox(
             point(max.x, min.y, max.z),
             point(max.x, max.y, min.z),
             max
-        ).fold(this) { current, next -> current + (matrix * next) }
+        ).fold(BoundingBox()) { current, next -> current + (matrix * next) }
+
+    fun isIntersectedBy(ray: Ray): Boolean {
+        val (xTMin, xTMax) = checkAxis(ray.origin.x, ray.direction.x, min.x, max.x)
+        val (yTMin, yTMax) = checkAxis(ray.origin.y, ray.direction.y, min.y, max.y)
+        val (zTMin, zTMax) = checkAxis(ray.origin.z, ray.direction.z, min.z, max.z)
+
+        val tMin = maxOf(xTMin, yTMin, zTMin)
+        val tMax = minOf(xTMax, yTMax, zTMax)
+
+        return tMin <= tMax
+    }
+
+    private fun checkAxis(origin: Double, direction: Double, lower: Double, higher: Double): Pair<Double,Double> {
+        val tMinNumerator = (lower - origin)
+        val tMaxNumerator = (higher - origin)
+
+        val tMinMax = if (direction.absoluteValue >= EPSILON) Pair(tMinNumerator / direction, tMaxNumerator / direction)
+        else Pair(tMinNumerator * Double.POSITIVE_INFINITY, tMaxNumerator * Double.POSITIVE_INFINITY)
+
+        return if (tMinMax.first > tMinMax.second) Pair(tMinMax.second, tMinMax.first) else tMinMax
+    }
+
+    override fun toString(): String {
+        return "BoundingBox(min=$min, max=$max)"
+    }
 }

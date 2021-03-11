@@ -6,6 +6,8 @@ import io.kotest.data.headers
 import io.kotest.data.row
 import io.kotest.data.table
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import krater.geometry.point
 import krater.geometry.translation
@@ -126,6 +128,25 @@ class CsgSpec : FunSpec({
         val shape = Csg(operation = DIFFERENCE, left, right)
         shape.boundingBox.min.shouldBe(point(-1, -1, -1))
         shape.boundingBox.max.shouldBe(point(3, 4, 5))
+    }
 
+    test("Intersecting ray+csg doesn't test children if box is missed") {
+        val left = TestShape()
+        val right = TestShape()
+        val shape = Csg(DIFFERENCE, left, right)
+        val r = Ray(point(0, 0, -5), vector(0, 1, 0))
+        val xs = shape.intersect(r)
+        left.savedRay.shouldBeNull()
+        right.savedRay.shouldBeNull()
+    }
+
+    test("Intersecting ray+csg tests children if box is hit") {
+        val left = TestShape()
+        val right = TestShape()
+        val shape = Csg(DIFFERENCE, left, right)
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val xs = shape.intersect(r)
+        left.savedRay.shouldNotBeNull()
+        right.savedRay.shouldNotBeNull()
     }
 })

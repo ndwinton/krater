@@ -29,7 +29,11 @@ class Csg(
     }
 
     override fun localIntersect(objectRay: Ray): List<Intersection> =
-        filterIntersections((left.intersect(objectRay) + right.intersect(objectRay)).sortedBy { it.t })
+        if (boundingBox.isIntersectedBy(objectRay)) {
+            filterIntersections((left.intersect(objectRay) + right.intersect(objectRay)).sortedBy { it.t })
+        } else {
+            emptyList()
+        }
 
     fun filterIntersections(list: List<Intersection>): List<Intersection> {
         var inLeft = false
