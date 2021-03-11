@@ -70,4 +70,16 @@ class ConeSpec : FunSpec({
             shape.localNormalAt(point).shouldBe(normal)
         }
     }
+
+    test("An unbounded cone has a bounding box") {
+        val shape = Cone()
+        shape.boundingBox.min.shouldBe(point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY))
+        shape.boundingBox.max.shouldBe(point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY))
+    }
+
+    test("A bounded cone has a bounding box") {
+        val shape = Cone(minimum = -5.0, maximum = 3.0)
+        shape.boundingBox.min.shouldBe(point(-5, -5, -5))
+        shape.boundingBox.max.shouldBe(point(5, 3, 5))
+    }
 })

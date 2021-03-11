@@ -82,4 +82,14 @@ class TriangleSpec :  FunSpec({
         xs.size.shouldBe(1)
         xs[0].t.shouldBe(2.0)
     }
+
+    test("A triangle has a bounding box") {
+        val p1 = point(-3, 7, 2)
+        val p2 = point(6, 2, -4)
+        val p3 = point(2, -1, -1)
+        val shape = Triangle(p1, p2, p3)
+
+        shape.boundingBox.min.shouldBe(point(-3, -1, -4))
+        shape.boundingBox.max.shouldBe(point(6, 7, 2))
+    }
 })

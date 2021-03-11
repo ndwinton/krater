@@ -123,4 +123,10 @@ class SphereSpec : FunSpec({
 
         s.material.shouldBe(m)
     }
+
+    test("A sphere has a bounding box") {
+        val s = Sphere()
+        s.boundingBox.min.shouldBe(point(-1, -1, -1))
+        s.boundingBox.max.shouldBe(point(1, 1, 1))
+    }
 })

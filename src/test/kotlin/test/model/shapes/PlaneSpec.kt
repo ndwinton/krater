@@ -52,4 +52,10 @@ class PlaneSpec : FunSpec({
         xs[0].t.shouldBe(2.0)
         xs[0].shape.shouldBe(p)
     }
+
+    test("A plane has a bounding box") {
+        val plane = Plane()
+        plane.boundingBox.min.shouldBe(point(Double.NEGATIVE_INFINITY, 0, Double.NEGATIVE_INFINITY))
+        plane.boundingBox.max.shouldBe(point(Double.POSITIVE_INFINITY, 0, Double.POSITIVE_INFINITY))
+    }
 })

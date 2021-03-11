@@ -60,4 +60,9 @@ class Cylinder(material: Material = Material(),
             else -> emptyList()
         }
     }
+
+    override val boundingBox: BoundingBox = BoundingBox(
+        min = point(-1, minimum, -1),
+        max = point(1, maximum, 1)
+    )
 }

@@ -36,4 +36,6 @@ class Cube(transform: Matrix = IDENTITY_4X4_MATRIX,
 
         return if (tMinMax.first > tMinMax.second) Pair(tMinMax.second, tMinMax.first) else tMinMax
     }
+
+    override val boundingBox: BoundingBox = BoundingBox(min = point(-1, -1, -1), max = point(1, 1, 1))
 }

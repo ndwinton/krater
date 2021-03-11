@@ -33,4 +33,6 @@ open class Triangle(val p1: Tuple, val p2: Tuple, val p3: Tuple,
         val t = f * e2.dot(originCrossE1)
         return listOf(Intersection(t, this, u = u, v = v))
     }
+
+    override val boundingBox: BoundingBox = BoundingBox() + p1 + p2 + p3
 }

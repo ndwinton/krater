@@ -4,12 +4,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import krater.canvas.BLACK
-import krater.canvas.Color
-import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
-import krater.model.pattern.Stripe
+import krater.model.shapes.BoundingBox
 import krater.model.shapes.Group
 import krater.model.shapes.Shape
 import krater.model.shapes.Sphere
@@ -134,6 +131,18 @@ class ShapeSpec : FunSpec({
 
         n.shouldBe(vector(0.28570, 0.42854, -0.85716))
     }
+
+    test("A shape has a bounding box") {
+        val shape = TestShape()
+        shape.boundingBox.min.shouldBe(point(-42, -42, -42))
+        shape.boundingBox.max.shouldBe(point(42, 42, 42))
+    }
+
+    test("Querying a shape's bounding box in its parent's space") {
+        val shape = Sphere(transform = translation(1, -3, 5) * scaling(0.5, 2, 4))
+        shape.parentSpaceBounds.min.shouldBe(point(0.5, -5, 1))
+        shape.parentSpaceBounds.max.shouldBe(point(1.5, -1, 9))
+    }
 })
 
 class TestShape(transform: Matrix = IDENTITY_4X4_MATRIX, material: Material = Material()) : Shape(transform = transform, material = material) {
@@ -149,4 +158,6 @@ class TestShape(transform: Matrix = IDENTITY_4X4_MATRIX, material: Material = Ma
         savedRay = objectRay
         return emptyList()
     }
+
+    override val boundingBox: BoundingBox = BoundingBox(point(-42, -42, -42), point(42, 42, 42))
 }

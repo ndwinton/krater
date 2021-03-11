@@ -30,6 +30,8 @@ class Sphere(
 
     override fun localNormalAt(objectPoint: Tuple, intersection: Intersection): Tuple = objectPoint - point(0, 0, 0)
 
+    override val boundingBox: BoundingBox = BoundingBox(min = point(-1, -1, -1), max = point(1, 1, 1))
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

@@ -44,4 +44,9 @@ class DoubleExtensionsSpec : FunSpec({
         (-1.0).nearHash().shouldNotBe((-0.0009).nearHash())
         (-1.0).nearHash().shouldNotBe((-0.99994).nearHash())
     }
+
+    test("Infinities should be handled") {
+        Double.POSITIVE_INFINITY.near(Double.POSITIVE_INFINITY).shouldBe(true)
+        Double.NEGATIVE_INFINITY.near(Double.NEGATIVE_INFINITY).shouldBe(true)
+    }
 })

@@ -4,7 +4,9 @@ import krater.geometry.*
 import krater.model.Intersection
 import krater.model.Material
 import krater.model.Ray
+import kotlin.math.abs
 import kotlin.math.absoluteValue
+import kotlin.math.max
 import kotlin.math.sqrt
 
 class Cone(material: Material = Material(),
@@ -68,4 +70,10 @@ class Cone(material: Material = Material(),
             else -> emptyList()
         }
     }
+
+    private val limit = max(abs(minimum), abs(maximum))
+    override val boundingBox: BoundingBox = BoundingBox(
+        min = point(-limit, minimum, -limit),
+        max = point(limit, maximum, limit)
+    )
 }

@@ -70,4 +70,10 @@ class CubeSpec : FunSpec({
             c.localNormalAt(point).shouldBe(normal)
         }
     }
+
+    test("A cube has a bounding box") {
+        val cube = Cube()
+        cube.boundingBox.min.shouldBe(point(-1, -1, -1))
+        cube.boundingBox.max.shouldBe(point(1, 1, 1))
+    }
 })

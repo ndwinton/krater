@@ -54,4 +54,9 @@ abstract class Shape(
     }
 
     open fun includes(shape: Shape) = this.equals(shape)
+
+    open val boundingBox: BoundingBox = BoundingBox()
+
+    val parentSpaceBounds: BoundingBox
+        get() = BoundingBox(min = transform * boundingBox.min, max = transform * boundingBox.max)
 }

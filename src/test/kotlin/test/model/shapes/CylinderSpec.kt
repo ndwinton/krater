@@ -121,4 +121,16 @@ class CylinderSpec : FunSpec({
             cyl.localNormalAt(point).shouldBe(normal)
         }
     }
+
+    test("An unbounded cylinder has a bounding box") {
+        val shape = Cylinder()
+        shape.boundingBox.min.shouldBe(point(-1, Double.NEGATIVE_INFINITY, -1))
+        shape.boundingBox.max.shouldBe(point(1, Double.POSITIVE_INFINITY, 1))
+    }
+
+    test("A bounded cylinder has a bounding box") {
+        val shape = Cylinder(minimum = -5.0, maximum = 3.0)
+        shape.boundingBox.min.shouldBe(point(-1, -5, -1))
+        shape.boundingBox.max.shouldBe(point(1, 3, 1))
+    }
 })

@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import krater.geometry.*
 import krater.model.shapes.Group
 import krater.model.Ray
+import krater.model.shapes.Cylinder
 import krater.model.shapes.Sphere
 
 class GroupSpec : FunSpec({
@@ -58,5 +59,13 @@ class GroupSpec : FunSpec({
         val xs = g.intersect(r)
 
         xs.size.shouldBe(2)
+    }
+
+    test("A group has a bounding box that contains its children") {
+        val s = Sphere(transform = translation(2, 5, -3) * scaling(2, 2, 2))
+        val c = Cylinder(minimum = -2.0, maximum = 2.0, transform = translation(-4, -1, 4) * scaling(0.5, 1, 0.5))
+        val shape = Group(shapes = listOf(s, c))
+        shape.boundingBox.min.shouldBe(point(-4.5, -3, -5))
+        shape.boundingBox.max.shouldBe(point(4, 7, 4.5))
     }
 })

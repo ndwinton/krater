@@ -44,4 +44,6 @@ class Csg(
     }
 
     override fun includes(shape: Shape): Boolean = this.equals(shape) || left.includes(shape) || right.includes(shape)
+
+    override val boundingBox: BoundingBox = left.parentSpaceBounds + right.parentSpaceBounds
 }

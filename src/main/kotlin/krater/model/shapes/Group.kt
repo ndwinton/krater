@@ -20,4 +20,7 @@ class Group(transform: Matrix = IDENTITY_4X4_MATRIX, val shapes: List<Shape> = e
         shapes.flatMap { it.intersect(objectRay) }.sortedBy { it.t }
 
     override fun includes(shape: Shape): Boolean = this.equals(shape) || shapes.any { it.includes(shape) }
+
+    override val boundingBox: BoundingBox =
+        shapes.fold(BoundingBox()) { current, next -> current + next.parentSpaceBounds }
 }

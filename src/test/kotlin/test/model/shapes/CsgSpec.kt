@@ -120,4 +120,12 @@ class CsgSpec : FunSpec({
         xs[1].t.shouldBe(6.5)
     }
 
+    test("A CSG shape has a bounding box that contains its children") {
+        val left = Sphere()
+        val right = Sphere(transform = translation(2, 3, 4))
+        val shape = Csg(operation = DIFFERENCE, left, right)
+        shape.boundingBox.min.shouldBe(point(-1, -1, -1))
+        shape.boundingBox.max.shouldBe(point(3, 4, 5))
+
+    }
 })
