@@ -81,4 +81,22 @@ class BoundingBox(
     override fun toString(): String {
         return "BoundingBox(min=$min, max=$max)"
     }
+
+    fun split(): Pair<BoundingBox,BoundingBox> {
+        val dx = (max.x - min.x) / 2.0
+        val dy = (max.y - min.y) / 2.0
+        val dz = (max.z - min.z) / 2.0
+        val greatest = max(max(dx, dy), dz)
+
+        val (midMin, midMax) = when (greatest) {
+            dx -> Pair(point(min.x + dx, min.y, min.z), point(max.x - dx, max.y, max.z))
+            dy -> Pair(point(min.x, min.y + dy, min.z), point(max.x, max.y - dy, max.z))
+            else -> Pair(point(min.x, min.y, min.z + dz), point(max.x, max.y, max.z - dz))
+        }
+
+        return Pair(
+            BoundingBox(min = min, max = midMax),
+            BoundingBox(min = midMin, max = max)
+        )
+    }
 }

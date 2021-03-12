@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import krater.geometry.*
 import krater.model.shapes.Group
 import krater.model.Ray
@@ -92,5 +93,47 @@ class GroupSpec : FunSpec({
     test("Parent bounding box of an empty transformed group is empty") {
         val group = Group(transform = rotationX(PI / 4))
         group.parentSpaceBounds.shouldBe(BoundingBox())
+    }
+
+    test("Partitioning a group into sub-groups") {
+        val s1 = Sphere(transform = translation(-2, 0, 0))
+        val s2 = Sphere(transform = translation(2, 0, 0))
+        val s3 = Sphere()
+        val transform = rotationX(PI /4)
+        val g = Group(shapes = listOf(s1, s2, s3), transform = transform)
+
+        val partitioned = g.partition()
+        partitioned.transform.shouldBe(transform)
+        val (left, right, remainder) = partitioned.shapes
+
+        left as Group
+        right as Group
+        remainder as Group
+        left.shapes.shouldBe(listOf(s1))
+        right.shapes.shouldBe(listOf(s2))
+        remainder.shapes.shouldBe(listOf(s3))
+    }
+
+    test("Subdividing a group partitions its children") {
+        val s1 = Sphere(transform = translation(-2, -2, 0))
+        val s2 = Sphere(transform = translation(-2, 2, 0))
+        val s3 = Sphere(transform = scaling(4, 4, 4))
+        val g = Group(shapes = listOf(s1, s2, s3), transform = rotationX(PI / 4))
+
+        val divide1 = g.divide(1) as Group
+        divide1.shapes.forEach { println(it) }
+        divide1.transform.shouldBe(g.transform)
+        divide1.shapes.size.shouldBe(2)
+        divide1.shapes.forEach { it.shouldBeInstanceOf<Group>() }
+        divide1.shapes.map {
+            it as Group
+            it.shapes.size
+        }.sum().shouldBe(3)
+
+        val divide3 = g.divide(3) as Group
+        divide3.shapes.forEach { println(it) }
+        divide3.transform.shouldBe(g.transform)
+        divide3.shapes.size.shouldBe(3)
+        divide3.shapes.forEach { it.shouldBeInstanceOf<Sphere>() }
     }
 })

@@ -128,4 +128,40 @@ class BoundingBoxSpec : FunSpec ({
             box.isIntersectedBy(r).shouldBe(result)
         }
     }
+
+    test("Splitting a perfect cube") {
+        val box = BoundingBox(min = point(-1, -4, -5), max = point(9, 6, 5))
+        val (left, right) = box.split()
+        left.min.shouldBe(point(-1, -4, -5))
+        left.max.shouldBe(point(4, 6, 5))
+        right.min.shouldBe(point(4, -4, -5))
+        right.max.shouldBe(point(9, 6, 5))
+    }
+
+    test("Splitting an x-wide box") {
+        val box = BoundingBox(min = point(-1, -2, -3), max = point(9, 5.5, 3))
+        val (left, right) = box.split()
+        left.min.shouldBe(point(-1, -2, -3))
+        left.max.shouldBe(point(4, 5.5, 3))
+        right.min.shouldBe(point(4, -2, -3))
+        right.max.shouldBe(point(9, 5.5, 3))
+    }
+
+    test("Splitting a y-wide box") {
+        val box = BoundingBox(min = point(-1, -2, -3), max = point(5, 8, 3))
+        val (left, right) = box.split()
+        left.min.shouldBe(point(-1, -2, -3))
+        left.max.shouldBe(point(5, 3, 3))
+        right.min.shouldBe(point(-1, 3, -3))
+        right.max.shouldBe(point(5, 8, 3))
+    }
+
+    test("Splitting a z-wide box") {
+        val box = BoundingBox(min = point(-1, -2, -3), max = point(5, 3, 7))
+        val (left, right) = box.split()
+        left.min.shouldBe(point(-1, -2, -3))
+        left.max.shouldBe(point(5, 3, 2))
+        right.min.shouldBe(point(-1, -2, 2))
+        right.max.shouldBe(point(5, 3, 7))
+    }
 })

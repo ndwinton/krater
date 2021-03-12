@@ -15,7 +15,9 @@ abstract class Shape(
     // Not really happy with mutable+nullable value, but it's the easiest way
     // to stay in line with the book.
     var parent: Shape? = null
-        set(value) = if (field != null) throw IllegalAccessException("Can't set parent more than once") else field = value
+    // The constraint that parent can only be set once had to be relaxed in
+    // order to implement group partitioning.
+    //    set(value) = if (field != null) throw IllegalAccessException("Can't set parent more than once") else field = value
 
     // We can pre-calculate the transformations that may be required at
     // a group level to save multiple repeated identical matrix operations.
@@ -54,6 +56,8 @@ abstract class Shape(
     }
 
     open fun includes(shape: Shape) = this.equals(shape)
+
+    open fun divide(threshold: Int = 1): Shape = this
 
     open val boundingBox: BoundingBox = BoundingBox()
 

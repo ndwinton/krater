@@ -93,7 +93,9 @@ class ShapeSpec : FunSpec({
         s.parent.shouldBeNull()
     }
 
-    test("Shape parent should only be settable once") {
+    // This is no longer possible with group partitioning creating new
+    // groups from existing elements
+    xtest("Shape parent should only be settable once") {
         val s = TestShape()
         s.parent = s
         s.parent.shouldBe(s)
@@ -142,6 +144,11 @@ class ShapeSpec : FunSpec({
         val shape = Sphere(transform = translation(1, -3, 5) * scaling(0.5, 2, 4))
         shape.parentSpaceBounds.min.shouldBe(point(0.5, -5, 1))
         shape.parentSpaceBounds.max.shouldBe(point(1.5, -1, 9))
+    }
+
+    test("Subdividing a primitive does nothing") {
+        val shape = Sphere()
+        shape.divide(1).shouldBe(shape)
     }
 })
 

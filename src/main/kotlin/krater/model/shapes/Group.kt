@@ -34,4 +34,18 @@ class Group(transform: Matrix = IDENTITY_4X4_MATRIX, val shapes: List<Shape> = e
     override fun toString(): String {
         return "Group(shapes=$shapes, boundingBox=$boundingBox)"
     }
+
+    fun partition(): Group {
+        val (leftBox, rightBox) = boundingBox.split()
+        val (inLeft, notLeft) = shapes.partition { leftBox.contains(it.parentSpaceBounds) }
+        val (inRight, remainder) = notLeft.partition { rightBox.contains(it.parentSpaceBounds) }
+        return Group(shapes = listOf(inLeft, inRight, remainder)
+            .filter { it.isNotEmpty() }
+            .map { Group(shapes = it) }, transform = transform)
+    }
+
+    override fun divide(threshold: Int): Shape {
+        val partitioned = if (threshold < shapes.size) partition() else this
+        return Group(shapes = partitioned.shapes.map { it.divide(threshold) }, transform = partitioned.transform)
+    }
 }

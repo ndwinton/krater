@@ -9,6 +9,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import krater.geometry.point
 import krater.geometry.translation
 import krater.geometry.vector
@@ -148,5 +149,20 @@ class CsgSpec : FunSpec({
         val xs = shape.intersect(r)
         left.savedRay.shouldNotBeNull()
         right.savedRay.shouldNotBeNull()
+    }
+
+    test("Subdividing a GSG shape subdivides its children") {
+        val s1 = Sphere(transform = translation(-1.5, 0, 0))
+        val s2 = Sphere(transform = translation(1.5, 0, 0))
+        val left = Group(shapes = listOf(s1, s2))
+        val s3 = Sphere(transform = translation(0, 0, -1.5))
+        val s4 = Sphere(transform = translation( 0, 0, 1.5))
+        val right = Group(shapes = listOf(s3, s4))
+        val shape = Csg(DIFFERENCE, left, right)
+        val divided = shape.divide(1) as Csg
+        val l = divided.left as Group
+        l.shapes.forEach { it.shouldBeInstanceOf<Group>() }
+        val r = divided.right as Group
+        r.shapes.forEach { it.shouldBeInstanceOf<Group>() }
     }
 })
