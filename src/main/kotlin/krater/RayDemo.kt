@@ -2,9 +2,13 @@ package krater
 
 import krater.canvas.BLACK
 import krater.canvas.Color
+import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
+import krater.model.pattern.map.TextureMap
+import krater.model.pattern.map.UVChecker
+import krater.model.pattern.map.sphericalMap
 import krater.model.pattern.noise.PerlinNoise
 import krater.model.shapes.*
 import java.io.File
@@ -38,7 +42,7 @@ fun main(args: Array<String>) {
     )
 
     val middle = Sphere(
-        transform = translation(-0.5, 0.0, 0.5),
+        transform = translation(-0.5, 0.0, 0.5).scale(0.75, 1.0, 1.0),
         material = Material(
             color = Color(0.1, 1.0, 0.5),
             diffuse = 0.7,
@@ -49,7 +53,11 @@ fun main(args: Array<String>) {
                 Color(1.0, 0.0, 0.0),
                 Color(1.0, 0.5, 0.5),
                 scaling(0.5, 0.5, 0.5).rotateZ(PI / 4)
-            ) //+ Checker(WHITE, BLACK, transform = scaling(0.5, 0.5, 0.5))
+            ) + TextureMap(
+                texture = UVChecker(16, 8, WHITE, BLACK),
+                mappingFunction = ::sphericalMap,
+                transform = rotationY(PI / 4)
+            )
         )
     )
 
