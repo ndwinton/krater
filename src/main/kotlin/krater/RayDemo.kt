@@ -7,7 +7,6 @@ import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
 import krater.model.pattern.map.TextureMap
-import krater.model.pattern.map.UVChecker
 import krater.model.pattern.map.sphericalMap
 import krater.model.pattern.noise.PerlinNoise
 import krater.model.shapes.*
@@ -26,7 +25,11 @@ fun main(args: Array<String>) {
             reflective = 0.1,
             transparency = 0.0,
             pattern = PerlinNoise(
-                pattern = Stripe(Color(1.0, 0.75, 0.0), Color(1.0, 1.0, 0.5), rotationY(PI/2).scale(0.25, 1, 0.25)),
+                pattern = Stripe(
+                    a = Stripe(a = BLACK, b = Color(1.0, 0.75, 0.0), repeat = 20),
+                    b = Color(1.0, 1.0, 0.5),
+                    transform = rotationY(PI/2).scale(0.25, 1, 0.25),
+                    repeat = 5),
                 scale = 1.5,
                 octaves = 5,
                 persistence = 0.5
@@ -36,7 +39,7 @@ fun main(args: Array<String>) {
     val sky = Plane(
         material = Material(
             ambient = 0.7,
-            pattern = Gradient(Color(0.5, 0.5, 1.0), Color(0.1, 0.8, 0.8), scaling(1, 1, 1000))
+            color = Color(0.1, 0.5, 1.0),
         ),
         transform = scaling(5000, 1, 1).translate(0, 5000, 0).rotateY(PI / 2).rotateX(PI / 4)
     )
@@ -52,9 +55,10 @@ fun main(args: Array<String>) {
             pattern = Stripe(
                 Color(1.0, 0.0, 0.0),
                 Color(1.0, 0.5, 0.5),
-                scaling(0.5, 0.5, 0.5).rotateZ(PI / 4)
+                scaling(0.5, 0.5, 0.5).rotateZ(PI / 4),
+                3
             ) + TextureMap(
-                texture = UVChecker(16, 8, WHITE, BLACK),
+                texture = Checker(WHITE, BLACK, uFrequency = 16, vFrequency = 8),
                 mappingFunction = ::sphericalMap,
                 transform = rotationY(PI / 4)
             )

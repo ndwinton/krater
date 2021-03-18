@@ -5,9 +5,12 @@ import krater.canvas.ColorProvider
 import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.Matrix
 import krater.geometry.Tuple
+import krater.geometry.point
+import krater.model.pattern.map.Texture
+import krater.model.pattern.map.UVPoint
 import kotlin.math.abs
 
-abstract class Pattern(val transform: Matrix = IDENTITY_4X4_MATRIX) : ColorProvider {
+abstract class Pattern(val transform: Matrix = IDENTITY_4X4_MATRIX) : ColorProvider, Texture {
     private val inverseTransform = transform.inverse()
 
     abstract fun colorAt(point: Tuple): Color
@@ -48,4 +51,6 @@ abstract class Pattern(val transform: Matrix = IDENTITY_4X4_MATRIX) : ColorProvi
     override fun hashCode(): Int {
         return transform.hashCode()
     }
+
+    override fun colorAtUV(uvPoint: UVPoint): Color = colorAt(point = point(uvPoint.u, 0, uvPoint.v))
 }

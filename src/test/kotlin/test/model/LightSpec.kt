@@ -222,7 +222,7 @@ class LightSpec : FunSpec({
                 ambient = 1.0,
                 diffuse = 0.0,
                 specular = 0.0,
-                pattern = Stripe(WHITE, BLACK),
+                pattern = Stripe(WHITE, BLACK, repeat = 2),
                 reflective = 0.0,
             )
         )
@@ -240,7 +240,7 @@ class LightSpec : FunSpec({
     test("Lighting with a pattern applied and shape transformed") {
         val s = TestShape(
             material = Material(
-                pattern = Stripe(WHITE, BLACK),
+                pattern = Stripe(WHITE, BLACK, repeat = 2),
                 ambient = 1.0,
                 diffuse = 0.0,
                 specular = 0.0,

@@ -54,4 +54,19 @@ class StripeSpec : FunSpec ({
 
         c.shouldBe(WHITE)
     }
+
+    test("A stripe can have a repeat period") {
+        val pattern = Stripe(WHITE, BLACK, repeat = 3)
+
+        pattern.colorAt(point(0, 0, 0)).shouldBe(WHITE)
+        pattern.colorAt(point(0.9, 0, 0)).shouldBe(WHITE)
+        pattern.colorAt(point(1, 0, 0)).shouldBe(BLACK)
+        pattern.colorAt(point(2, 0, 0)).shouldBe(BLACK)
+        pattern.colorAt(point(2.9, 0, 0)).shouldBe(BLACK)
+        pattern.colorAt(point(3, 0, 0)).shouldBe(WHITE)
+        pattern.colorAt(point(-0.1, 0, 0)).shouldBe(BLACK)
+        pattern.colorAt(point(-1, 0, 0)).shouldBe(BLACK)
+        pattern.colorAt(point(-2, 0, 0)).shouldBe(BLACK)
+        pattern.colorAt(point(-3, 0, 0)).shouldBe(WHITE)
+    }
 })

@@ -9,14 +9,14 @@ import io.kotest.matchers.shouldBe
 import krater.canvas.BLACK
 import krater.canvas.WHITE
 import krater.geometry.point
+import krater.model.pattern.Checker
 import krater.model.pattern.map.TextureMap
-import krater.model.pattern.map.UVChecker
 import krater.model.pattern.map.sphericalMap
 
-class TextureMapSpecn : FunSpec({
+class TextureMapSpec : FunSpec({
 
     test("Using a texture map pattern with a spherical map") {
-        val checkers = UVChecker(16, 8, BLACK, WHITE)
+        val checkers = Checker(uFrequency = 16, vFrequency = 8, a = BLACK, b = WHITE)
         val pattern = TextureMap(checkers, ::sphericalMap)
         table(
             headers("point", "color"),

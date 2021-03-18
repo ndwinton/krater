@@ -6,12 +6,22 @@ import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.Matrix
 import krater.geometry.Tuple
 import krater.geometry.near
+import krater.model.pattern.map.UVPoint
 import kotlin.math.floor
 
-class Checker(val a: ColorProvider, val b: ColorProvider, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
+class Checker(
+    val a: ColorProvider,
+    val b: ColorProvider,
+    transform: Matrix = IDENTITY_4X4_MATRIX,
+    val uFrequency: Int = 1,
+    val vFrequency: Int = 1
+) : Pattern(transform) {
 
     override fun colorAt(point: Tuple): Color =
         if (((floor(point.x) + floor(point.y) + floor(point.z)) % 2.0).near(0.0)) a.colorAtObject(point) else b.colorAtObject(point)
+
+    override fun colorAtUV(uvPoint: UVPoint): Color =
+        super.colorAtUV(UVPoint(uvPoint.u * uFrequency, uvPoint.v * vFrequency))
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

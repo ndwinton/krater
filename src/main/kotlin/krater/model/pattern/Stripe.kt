@@ -8,10 +8,10 @@ import krater.geometry.Tuple
 import krater.geometry.near
 import kotlin.math.floor
 
-class Stripe(val a: ColorProvider, val b: ColorProvider, transform: Matrix = IDENTITY_4X4_MATRIX) : Pattern(transform) {
+class Stripe(val a: ColorProvider, val b: ColorProvider, transform: Matrix = IDENTITY_4X4_MATRIX, val repeat: Int = 2) : Pattern(transform) {
 
     override fun colorAt(point: Tuple): Color =
-        if ((floor(point.x) % 2).near(0.0)) a.colorAtObject(point) else b.colorAtObject(point)
+        if ((floor(point.x) % repeat).near(0.0)) a.colorAtObject(point) else b.colorAtObject(point)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

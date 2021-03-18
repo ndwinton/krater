@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
             reflective = 0.1,
             transparency = 0.0,
             pattern = PerlinNoise(
-                pattern = Stripe(Color(0.95, 0.95, 1.0), Color(0.8, 0.8, 0.9), rotationY(PI/2).scale(0.25, 1, 0.25)),
+                pattern = Stripe(Color(0.95, 0.95, 1.0), Color(0.8, 0.8, 0.9), rotationY(PI/2).scale(0.25, 1, 0.25), 4),
                 scale = 2.0,
                 octaves = 10,
                 persistence = 0.5
