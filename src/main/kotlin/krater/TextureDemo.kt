@@ -6,6 +6,7 @@ import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.Checker
 import krater.model.pattern.map.TextureMap
+import krater.model.pattern.map.planarMap
 import krater.model.pattern.map.sphericalMap
 import krater.model.shapes.Plane
 import krater.model.shapes.Sphere
@@ -34,8 +35,8 @@ fun main(args: Array<String>) {
     val plane = Plane(
         material = Material(
             pattern = TextureMap(
-                texture = Checker(uFrequency = 20, vFrequency = 50, a = Color(0.5, 0.0, 0.0), b = WHITE),
-            mappingFunction = ::sphericalMap
+                texture = Checker(uFrequency = 4, vFrequency = 4, a = Color(0.5, 0.0, 0.0), b = WHITE),
+            mappingFunction = ::planarMap
             )
         )
     )

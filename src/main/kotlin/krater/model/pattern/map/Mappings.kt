@@ -40,3 +40,6 @@ fun sphericalMap(point: Tuple): UVPoint {
 
     return UVPoint(u, v)
 }
+
+
+fun planarMap(point: Tuple) = UVPoint(point.x % 1.0, point.z % 1.0)
