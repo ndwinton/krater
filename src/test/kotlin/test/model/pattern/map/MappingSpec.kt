@@ -9,6 +9,7 @@ import io.kotest.matchers.shouldBe
 import krater.geometry.near
 import krater.geometry.point
 import krater.model.pattern.map.UVPoint
+import krater.model.pattern.map.cylindricalMap
 import krater.model.pattern.map.planarMap
 import krater.model.pattern.map.sphericalMap
 import kotlin.math.sqrt
@@ -44,6 +45,26 @@ class MappingSpec : FunSpec({
             row(point(0, 0, 0), 0.0, 0.0),
         ).forAll { point, u, v ->
             val uv = planarMap(point)
+            uv.u.near(u).shouldBe(true)
+            uv.v.near(v).shouldBe(true)
+        }
+    }
+
+    test("Using a cylindrical mapping on a 3D point") {
+        table(
+            headers("point", "u", "v"),
+            row(point(0, 0, -1), 0.0, 0.0),
+            row(point(0, 0.5, -1), 0.0, 0.5),
+            row(point(0, 1, -1), 0.0, 0.0),
+            row(point(0.70711, 0.5, -0.70711), 0.125, 0.5),
+            row(point(1, 0.5, 0), 0.25, 0.5),
+            row(point(0.70711, 0.5, 0.70711), 0.375, 0.5),
+            row(point(0, -0.25, 1), 0.5, -0.25),
+            row(point(-0.70711, 0.5, 0.70711), 0.625, 0.5),
+            row(point(-1, 1.25, 0), 0.75, 0.25),
+            row(point(-0.70711, 0.5, -0.70711), 0.875, 0.5),
+        ).forAll { point, u, v ->
+            val uv = cylindricalMap(point)
             uv.u.near(u).shouldBe(true)
             uv.v.near(v).shouldBe(true)
         }

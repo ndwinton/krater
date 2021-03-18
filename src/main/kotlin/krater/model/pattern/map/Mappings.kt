@@ -43,3 +43,11 @@ fun sphericalMap(point: Tuple): UVPoint {
 
 
 fun planarMap(point: Tuple) = UVPoint(point.x % 1.0, point.z % 1.0)
+
+fun cylindricalMap(point: Tuple): UVPoint {
+    val theta = atan2(point.x, point.z)
+    val rawU = theta / (2 * PI)
+    val u = 1 - (rawU + 0.5)
+    val v = point.y % 1.0
+    return UVPoint(u, v)
+}
