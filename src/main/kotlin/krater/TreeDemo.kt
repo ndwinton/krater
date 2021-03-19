@@ -31,14 +31,6 @@ fun main(args: Array<String>) {
         ),
     ))
 
-    val sky = Plane(
-        material = Material(
-            ambient = 0.7,
-            pattern = Gradient(Color(0.5, 0.5, 1.0), Color(0.1, 0.8, 0.8), scaling(1, 1, 1000))
-        ),
-        transform = scaling(10000, 1, 1).translate(0, 5000, 0).rotateY(PI / 2).rotateX(PI / 4)
-    )
-
     val world = World(
         lights = listOf(
             AreaLight(point(-4, 9, -10), vector(0.5, 0, 0), 4, vector(0, 0.5, 0), 4, Color(1.0, 1.0, 1.0))

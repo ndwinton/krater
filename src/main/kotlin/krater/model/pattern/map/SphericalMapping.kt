@@ -6,7 +6,7 @@ import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.atan2
 
-object SphericalMap : Mapping {
+object SphericalMapping : Mapping {
     override fun map(point: Tuple): UVPoint {
         // compute the azimuthal angle
         // -π < theta <= π

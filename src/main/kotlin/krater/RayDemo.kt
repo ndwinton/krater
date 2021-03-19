@@ -6,8 +6,8 @@ import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.*
-import krater.model.pattern.map.SphericalMap
-import krater.model.pattern.map.TextureMap
+import krater.model.pattern.map.SphericalMapping
+import krater.model.pattern.MappedTexture
 import krater.model.pattern.noise.PerlinNoise
 import krater.model.shapes.*
 import java.io.File
@@ -57,9 +57,9 @@ fun main(args: Array<String>) {
                 Color(1.0, 0.5, 0.5),
                 scaling(0.5, 0.5, 0.5).rotateZ(PI / 4),
                 3
-            ) + TextureMap(
+            ) + MappedTexture(
                 texture = Checker(WHITE, BLACK, uFrequency = 16, vFrequency = 8),
-                mapping = SphericalMap,
+                mapping = SphericalMapping,
                 transform = rotationY(PI / 4)
             )
         )

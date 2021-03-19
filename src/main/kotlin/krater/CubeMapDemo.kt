@@ -5,6 +5,7 @@ import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.AlignCheck
+import krater.model.pattern.MappedCube
 import krater.model.pattern.map.*
 import krater.model.shapes.Cube
 import java.io.File
@@ -30,7 +31,7 @@ fun main(args: Array<String>) {
     val up = AlignCheck(brown, cyan, purple, red, yellow)
     val down = AlignCheck(purple, brown, green, blue, white)
     val mapped = Material(
-        pattern = CubeMap(left, front, right, back, up, down),
+        pattern = MappedCube(left, front, right, back, up, down),
         ambient = 0.2,
         specular = 0.0,
         diffuse = 0.8

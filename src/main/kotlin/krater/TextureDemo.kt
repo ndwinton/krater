@@ -5,6 +5,8 @@ import krater.canvas.WHITE
 import krater.geometry.*
 import krater.model.*
 import krater.model.pattern.Checker
+import krater.model.pattern.MappedCube
+import krater.model.pattern.MappedTexture
 import krater.model.pattern.Solid
 import krater.model.pattern.map.*
 import krater.model.shapes.Cube
@@ -21,9 +23,9 @@ fun main(args: Array<String>) {
 
     val sphere = Sphere(
         material = Material(
-            pattern = TextureMap(
+            pattern = MappedTexture(
                 texture = Checker(uFrequency = 20, vFrequency = 10, a = Color(0.0, 0.5, 0.0), b =WHITE),
-                mapping = SphericalMap,
+                mapping = SphericalMapping,
                 transform = scaling(1.0, 0.5, 2.0).rotateZ(PI / 4).rotateX(-PI / 4)
             ),
             ambient = 0.2,
@@ -35,9 +37,9 @@ fun main(args: Array<String>) {
 
     val plane = Plane(
         material = Material(
-            pattern = TextureMap(
+            pattern = MappedTexture(
                 texture = Checker(uFrequency = 2, vFrequency = 2, a = Color(0.5, 0.0, 0.0), b = WHITE),
-                mapping = PlanarMap
+                mapping = PlanarMapping
             ),
             ambient = 0.2,
             specular = 0.4,
@@ -51,9 +53,9 @@ fun main(args: Array<String>) {
         maximum = 1.0 - EPSILON,
         closed = true,
         material = Material(
-            pattern = TextureMap(
+            pattern = MappedTexture(
                 texture = Checker(uFrequency = 16, vFrequency = 8, a = Color(0.0, 0.0, 0.5), b = WHITE),
-                mapping = CylindricalMap
+                mapping = CylindricalMapping
             ),
             ambient = 0.2,
             specular = 0.4,
@@ -65,7 +67,7 @@ fun main(args: Array<String>) {
 
     val cube = Cube(
         material = Material(
-            pattern = CubeMap(
+            pattern = MappedCube(
                 left = Solid(Color(1.0, 0.0, 0.0)),
                 right = Solid(Color(0.0, 1.0, 0.0)),
                 front = Solid(Color(0.0, 0.0, 1.0)),

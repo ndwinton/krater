@@ -1,4 +1,4 @@
-package test.model.pattern.map
+package test.model.pattern
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
@@ -10,14 +10,14 @@ import krater.canvas.BLACK
 import krater.canvas.WHITE
 import krater.geometry.point
 import krater.model.pattern.Checker
-import krater.model.pattern.map.SphericalMap
-import krater.model.pattern.map.TextureMap
+import krater.model.pattern.map.SphericalMapping
+import krater.model.pattern.MappedTexture
 
-class TextureMapSpec : FunSpec({
+class MappedTextureSpec : FunSpec({
 
     test("Using a texture map pattern with a spherical map") {
         val checkers = Checker(uFrequency = 16, vFrequency = 8, a = BLACK, b = WHITE)
-        val pattern = TextureMap(checkers, SphericalMap)
+        val pattern = MappedTexture(checkers, SphericalMapping)
         table(
             headers("point", "color"),
             row(point(0.4315, 0.4670, 0.7719), WHITE),

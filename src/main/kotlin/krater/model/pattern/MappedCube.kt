@@ -1,9 +1,9 @@
-package krater.model.pattern.map
+package krater.model.pattern
 
 import krater.canvas.Color
 import krater.geometry.IDENTITY_4X4_MATRIX
 import krater.geometry.Tuple
-import krater.model.pattern.Pattern
+import krater.model.pattern.map.UVPoint
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -11,7 +11,7 @@ internal enum class CubeFace {
     LEFT, RIGHT, FRONT, BACK, UP, DOWN
 }
 
-class CubeMap(
+class MappedCube(
     private val left: Texture,
     private val front: Texture,
     private val right: Texture,

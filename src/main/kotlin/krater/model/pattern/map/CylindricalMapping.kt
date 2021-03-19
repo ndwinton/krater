@@ -4,7 +4,7 @@ import krater.geometry.Tuple
 import kotlin.math.PI
 import kotlin.math.atan2
 
-object CylindricalMap : Mapping {
+object CylindricalMapping : Mapping {
     override fun map(point: Tuple): UVPoint {
         val theta = atan2(point.x, point.z)
         val rawU = theta / (2 * PI)
