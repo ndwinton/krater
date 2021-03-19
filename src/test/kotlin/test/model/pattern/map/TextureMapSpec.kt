@@ -10,14 +10,14 @@ import krater.canvas.BLACK
 import krater.canvas.WHITE
 import krater.geometry.point
 import krater.model.pattern.Checker
+import krater.model.pattern.map.SphericalMap
 import krater.model.pattern.map.TextureMap
-import krater.model.pattern.map.sphericalMap
 
 class TextureMapSpec : FunSpec({
 
     test("Using a texture map pattern with a spherical map") {
         val checkers = Checker(uFrequency = 16, vFrequency = 8, a = BLACK, b = WHITE)
-        val pattern = TextureMap(checkers, ::sphericalMap)
+        val pattern = TextureMap(checkers, SphericalMap)
         table(
             headers("point", "color"),
             row(point(0.4315, 0.4670, 0.7719), WHITE),
